@@ -1,0 +1,107 @@
+@import '@/scss/variables';
+@import '@/scss/fonts';
+/* Navbar Styles */
+.navbar {
+  margin: 1rem;
+  &.navbar-expand-xl {
+    background-color: white;
+    border-radius: 5px;
+    padding: 0.5rem 0;
+  }
+
+  .navbar-brand {
+    .logo {
+      height: 2rem;
+    }
+  }
+
+  .navbar-toggler {
+    &.navbar-toggler-icon {
+      // Add styles if needed
+    }
+  }
+
+  .collapse {
+    &.navbar-collapse {
+      .navbar-nav {
+        &.mx-auto {
+          justify-content: center;
+          align-items: center;
+
+          .nav-item {
+            .nav-link {
+              margin: 0 0.5rem;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              text-align: center;
+
+              div {
+                margin: 0 auto 5px;
+                background-size: cover;
+              }
+
+              p {
+                margin: 0;
+                padding-left: 6px;
+                margin-bottom: 5px;
+                font-family: $font-family-primary;
+                font-weight: $font-weight-bold;
+                font-size: $font-size-small;
+                line-height: $line-height-small;
+                color: $primary-text-color-dark-blue;
+              }
+            }
+          }
+        }
+      }
+
+      .justify-content-center {
+        align-items: center;
+
+        .nav-item {
+          &.border-end {
+            border-right: 1px solid var(--border-color-light-gray);
+            padding-right: 0.5rem;
+          }
+
+          .doctor-image {
+            width: 44px;
+            height: 44px;
+            background: transparent url('/../images/senior-woman-doctor-and-portrait-smile-for-health-2023-11-27-05-18-16-utc.png') no-repeat;
+            background-size: cover;
+            border-radius: 50%;
+          }
+
+          .ms-2 {
+            h4.doctor-name {
+              margin: 0;
+              font-weight: $font-weight-bold;
+              font-size: $font-size-small;
+              color: $primary-text-color-dark-blue;
+            }
+
+            p.doctor-title {
+              margin: 0;
+              font-weight: $font-weight-regular;
+              font-size: $font-size-small;
+              color: $neutral-color-dark-gray;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.patient-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.dots {
+  transform: rotate(0deg);
+  height: 20px;
+}
