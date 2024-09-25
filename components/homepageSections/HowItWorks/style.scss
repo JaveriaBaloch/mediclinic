@@ -1,0 +1,46 @@
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+@import '@/scss/variables';
+.container{
+    margin-top: 10rem;
+    ol{
+        li{
+            color: $link-color-dark-blue;
+            font-family: Manrope;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 300;
+            line-height: normal;
+            margin: 2rem 0;
+        }
+    }
+    .newlink{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        background: $link-color-dark-blue;
+        padding: 0.5rem 2.3rem;
+        border-radius: 3rem;
+        p{
+            color: #FFFFFF;
+            text-decoration: none;
+            margin-right: 1rem;
+            margin-top: 0.86rem;
+        }
+        svg{
+            animation: iconAnimate 1s infinite;
+        }
+    }
+}
+@keyframes iconAnimate{
+    0%{
+        margin-left: 0;
+    }
+    50%{
+        margin-left: 3rem;
+    }
+    100%{
+        margin-left: 0;
+    }
+}

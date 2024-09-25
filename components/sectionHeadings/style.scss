@@ -1,0 +1,19 @@
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+@import '@/scss/variables';
+
+.line{
+    width: 4rem;
+    // background: $link-color-dark-blue;
+    height: 0.5rem;
+    margin-bottom: 2rem;
+}
+.text{
+    // color:  $link-color-dark-blue;
+font-family: Manrope;
+font-size:2.5rem;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+margin-left: 1rem;
+}

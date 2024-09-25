@@ -1,0 +1,13 @@
+@mixin linearGradientTextStyle {
+background: linear-gradient(291deg, #01F0D0 22.27%, #006AAC 75.41%);
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+@mixin linearGradientPrimaryTitleText{
+font-family: 'Caveat';
+font-size: 52px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}
