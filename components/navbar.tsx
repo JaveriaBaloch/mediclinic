@@ -8,7 +8,11 @@ import { Icon } from './icons/icon';
 import { faCartPlus, faCartShopping, faHome, faKitMedical, faStethoscope } from '@fortawesome/free-solid-svg-icons';
 
 
-const Navbar = () => {
+interface NavbarProps {
+  activeItem:number
+}
+
+const Navbar:React.FC<NavbarProps> = ({activeItem}) => {
 
   useEffect(() => {
     // Dynamically import Bootstrap JS on client side only
@@ -30,19 +34,19 @@ const Navbar = () => {
           {/* First Navigation Group */}
           <ul className="navbar-nav mx-auto justify-content-center align-items-center">
             <li className="nav-item">
-              <Link href="/" className="nav-link active">
+              <Link href="/" className={`${"nav-link "} ${activeItem==0?'active':''}`}>
                 <Icon icon={faHome} size="1x" color='#062635'/>
                 <p>Home</p>
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/doctors" className="nav-link" aria-current="page">
+              <Link href="/doctors" className={`${"nav-link "} ${activeItem==1?'active':''}`} aria-current="page">
               <Icon icon={faStethoscope} size="1x" color='#062635'/>
                 <p>Doctors</p>
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/pharmacy" className="nav-link">
+              <Link href="/pharmacy" className={`${"nav-link "} ${activeItem==2?'active':''}`}>
                 <Icon icon={faKitMedical} size="1x" color='#062635'/>
                 <p>Pharmacy</p>
               </Link>
@@ -52,7 +56,7 @@ const Navbar = () => {
           {/* Second Navigation Group */}
           <ul className="navbar-nav justify-content-center align-items-center">
             <li className="nav-item p-0 me-3">
-              <Link href="/settings" className="nav-link p-0 ps-2">
+              <Link href="/cart" className="nav-link p-0 ps-2">
                 <div className="cart-icon-holder">
                 <Icon icon={faCartPlus} size="xl" color='#006AAC'/>
                 </div>

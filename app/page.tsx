@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main >
       <section id="Home">
-        <Navbar/>
+        <Navbar activeItem={0}/>
         <BannerHomePage/>
         <WhyUsHomeSection/>
         <HomePageServicesSection/>
