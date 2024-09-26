@@ -131,7 +131,7 @@ const Auth = () => {
                                     type="password" 
                                 />
                                  <button id="signinbtn">
-                                    Sign up
+                                    Sign In
                                 </button>
                             </div>
                             <p id="showsignup" 

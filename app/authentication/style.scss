@@ -3,11 +3,17 @@
 @import '@/scss/mixins';
 
 #Auth {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    min-height: 100vh;
     .container {
-        margin: 4rem;
-        border-radius: 1rem;
-        background: #FFFFFF;
-        overflow: hidden;
+        margin: 4rem; /* Your existing margin */
+    border-radius: 1rem;
+    background: #FFFFFF;
+    overflow: hidden;
+    width: 80%; /* Optional: set a width for responsiveness */
+    // max-width: 600px; /* Optional: set a max-width to avoid excessive */
 
         .intro {
             position: relative;
