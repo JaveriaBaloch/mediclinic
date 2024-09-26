@@ -10,7 +10,7 @@ export const BannerHomePage = () =>{
                 <div className="col-xl-5 col-lg-6 col-md-9 col-sm-12">
                     <h1 className="title mb-3">Your Health, Your Choice. Access Care Online.</h1>
                     <p className="para mb-5">Book appointments, find doctors, pharmacies, and hospitals near you.</p>
-                    <Link href="" className="link">
+                    <Link href="/authentication" className="link">
                         <Icon color="#FFFFFF" size="xl" icon={faFile}/>
                         <p>Book Appointment Now</p>
                     </Link>
