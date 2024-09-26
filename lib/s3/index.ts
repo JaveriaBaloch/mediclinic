@@ -1,29 +1,31 @@
 // src/lib/s3.ts
 
-import AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand, ObjectCannedACL } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from 'uuid';
 
-// Configure AWS SDK
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+// Configure the S3 client
+const s3Client = new S3Client({
   region: process.env.AWS_REGION || 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
 });
 
-const s3 = new AWS.S3();
-
-export async function s3Upload(file: File): Promise<string> {
+export const s3Upload = async (file: File): Promise<string> => {
   const fileExtension = file.name.split('.').pop();
   const fileName = `${uuidv4()}.${fileExtension}`;
 
-  const params = {
+  const uploadParams = {
     Bucket: process.env.AWS_BUCKET_NAME!,
     Key: fileName,
-    Body: Buffer.from(await file.arrayBuffer()),
+    Body: Buffer.from(await file.arrayBuffer()), // Convert file to Buffer
     ContentType: file.type,
-    ACL: 'public-read', // Make the file publicly accessible
+    ACL: ObjectCannedACL.public_read_write, // Use predefined ACL
   };
 
-  const data = await s3.upload(params).promise();
-  return data.Location; // Return the URL of the uploaded file
-}
+  const command = new PutObjectCommand(uploadParams);
+  await s3Client.send(command);
+
+  return `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${fileName}`; // Return the URL of the uploaded file
+};
