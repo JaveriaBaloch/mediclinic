@@ -4,7 +4,7 @@ import { faFile } from "@fortawesome/free-solid-svg-icons/faFile"
 import './style.scss'
 export const BannerHomePage = () =>{
     return(
-        <div className="my-5 container">
+        <div className="my-t pt-5 container">
 
             <div className="row d-flex justify-content-between align-items-center">
                 <div className="col-xl-5 col-lg-6 col-md-9 col-sm-12">
