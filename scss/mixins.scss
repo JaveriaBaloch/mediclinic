@@ -11,3 +11,17 @@ font-style: normal;
 font-weight: 700;
 line-height: normal;
 }
+@mixin circleDashedImage{
+    object-fit: cover;
+    border-radius: 50%;
+    border: 7px $activestate-bg-primary dashed;
+
+}
+@mixin attachBg{
+    position: absolute;
+
+    object-fit: contain;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}

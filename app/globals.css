@@ -1,4 +1,6 @@
-
+body{
+    overflow-x: hidden;
+}
 #patients {
     position: relative;
     height: 140vh;

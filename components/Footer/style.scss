@@ -1,0 +1,18 @@
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+@import '@/scss/variables';
+
+footer {
+    margin-top: 8rem;
+    padding-bottom: 2rem;
+    p{
+      
+        color: $link-color-dark-blue;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+}

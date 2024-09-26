@@ -22,12 +22,13 @@
         background: $link-color-dark-blue;
         padding: 0.5rem 2.3rem;
         border-radius: 3rem;
+        text-decoration: none;
         p{
             color: #FFFFFF;
-            text-decoration: none;
             margin-right: 1rem;
             margin-top: 0.86rem;
         }
+      
         svg{
             animation: iconAnimate 1s infinite;
         }

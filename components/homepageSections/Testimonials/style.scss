@@ -1,0 +1,76 @@
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+@import '@/scss/variables';
+#testinomials{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content:center ;
+    align-items: center;
+    margin-bottom: 19rem;
+    height: fit-content;
+    .bg1{
+        position: absolute;
+       
+        object-fit: contain;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        
+    }
+}
+.testimonials{
+    margin-top: 3rem;
+    position: relative;
+    display: flex;
+    justify-content:center ;
+    align-items: center;
+    z-index: 1;
+    .icon{
+        background: #ffffff;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content:center ;
+        align-items: center;
+    }
+    .list{
+        display: flex;
+        justify-content:center ;
+        align-items: center;
+        width: 70%;
+        .card{
+            width: 80%;
+            height: fit-content;
+            border-radius:7rem ;
+
+
+            img{
+                width: 5rem;
+                height: 5rem;
+               @include circleDashedImage();
+
+            }
+           
+            .card-text{
+                color: #062635;
+                text-align: center;
+                font-family: Manrope;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+        }
+        .card-title{
+            color: #939393;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+        }
+      }
+}
