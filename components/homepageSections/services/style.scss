@@ -1,11 +1,16 @@
 .bg{
     position: relative;
     padding: 4rem 0;
-
+    .container{
+    padding-top: 0rem;
+    }
 }
 .bg2{
     position: absolute;
-    top: 0;
-    left:0;
+    top: 0%;
+    left:-1%;
     margin-top: -6rem;
+    width: 110%;
+    height: 120%;
+    object-fit: cover;
 }
