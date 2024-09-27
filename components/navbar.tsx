@@ -84,7 +84,9 @@ const Navbar:React.FC<NavbarProps> = ({activeItem}) => {
             {sessionStorage.getItem("role") =='patient'&&
               <li className="nav-item p-0 me-3">
                 <Link href="/profile" className="nav-link p-0 ps-2 d-flex justify-content-center align-items-center flex-column">
-                    <img src={img?img:''} width={40} alt="" />
+                    <img src={img?img:''} width={45} alt="" style={{
+                      borderRadius:'50%'
+                    }}/>
                     <b style={{
                       color: '#062635',
                       textAlign: 'center',
