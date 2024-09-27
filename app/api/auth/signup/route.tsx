@@ -59,7 +59,8 @@ export async function POST(req: NextRequest) {
             email,
             password: hashedPassword,
             profileImage: imageUrl, // Save the correct image URL
-            role: role || 'patient', // Default to 'patient' role
+            role: role, // Default to 'patient' role
+            isDoctor:false
         });
 
         // Exclude the password from the response object
@@ -69,6 +70,7 @@ export async function POST(req: NextRequest) {
             email: newUser.email,
             profileImage: newUser.profileImage,
             role: newUser.role,
+            isDoctor:newUser.isDoctor
         };
 
         return NextResponse.json({ message: 'Signup successful', user: userResponse }, { status: 201 });

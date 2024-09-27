@@ -8,7 +8,7 @@ const Pharmacy = ()=>{
         <section id="Doctors">
             <Navbar activeItem={2}/>
             <FooterSection/>
-            <Link href={'/DoctorLogin'} className={styles.fixedbtn}>
+            <Link href={'/doctorAccountCreation'} className={styles.fixedbtn}>
                 <p>
                     Join as a Doctor
                 </p>

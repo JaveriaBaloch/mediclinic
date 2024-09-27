@@ -1,0 +1,238 @@
+@import '@/scss/variables';
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+
+#Auth {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 1rem;
+    .container {
+        margin: 0rem; /* Your existing margin */
+    border-radius: 1rem;
+    background: #FFFFFF;
+    overflow: hidden;
+    width: 80%; /* Optional: set a width for responsiveness */
+    // max-width: 600px; /* Optional: set a max-width to avoid excessive */
+
+        .intro {
+            position: relative;
+            background: #E4F6FF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 60%;
+            perspective: 1000px; // Add perspective for 3D effect
+
+            .holder {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                flex-direction: column;
+                padding: 5rem 0;
+
+                h1 {
+                    color: #006AAC;
+                    text-align: center;
+                    font-family: Manrope;
+                    font-size: 24px;
+                    font-weight: 800;
+                }
+
+                img {
+                    height: 20rem;
+                    transition: transform 0.3s ease; // Scale transition
+                }
+
+                .dot {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 21.913px;
+                    background: #6DC2EE;
+                    margin: 3rem 0.5rem;
+                    cursor: pointer; // Add cursor pointer to indicate clickable
+                    &.active-dot {
+                        border-radius: 50%;
+                        background: #03F0D0;
+                        width: 83.478px;
+                        height: 14px;
+                        flex-shrink: 0;
+                    }
+                }
+            }
+
+            .back {
+                position: absolute;
+                height: 30px;
+                background: #006AAC;
+                top: 10px;
+                right: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0.3rem 0.8rem;
+                text-decoration: none;
+                border-radius: 8rem;
+
+                .icon-back {
+                    font-size: 0.9rem;
+                    width: 1rem;
+                }
+
+                p {
+                    color: #E4F6FF;
+                    margin-left: 0.4rem;
+                    font-size: 0.8rem;
+                    margin-top: 1rem;
+                }
+            }
+        }
+
+        .forms {
+            width: 40%;
+           
+           
+            img {
+                margin: 2rem 1rem;
+                width: 4rem;
+            } 
+            
+            .form-container {
+                display: flex;
+                flex-direction: row;
+                position: relative;
+                perspective: 1200px; /* Adds perspective for 3D effect *
+                */
+                transform-origin: right;
+
+                #signin, #signup {
+                    position: absolute;
+                    width: 100%;
+                    backface-visibility: hidden; /* Prevents showing the back of forms */
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    transform-origin: right;
+                }
+
+                #signin {
+                    transform: rotateY(90deg); /* Initially hidden */
+                }
+
+                #signup {
+                    transform: rotateY(0deg); /* Initially visible */
+                }
+                    }
+                }
+             
+             
+             
+             
+            
+                /* Optional: On hover or other interaction, change rotation */
+                #signin:hover {
+                    transform: rotateY(0deg) translateX(0%); /* Bring the signin element into view */
+                }
+            
+                #signup:hover {
+                    transform: rotateY(0deg); /* Bring the signup element into view */
+                }
+                #signupbtn,#signinbtn{
+                    background: linear-gradient(256deg, #03F0D0 -16.4%, #006AAC 82.71%);
+                    width: 200px;
+                    height: 46px;
+                    flex-shrink: 0;
+                    color: #FFF;
+                    text-align: center;
+                    font-family: Manrope;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    margin: 2rem auto;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: none;
+                                    
+                }
+                #showsignin,#showsignup{
+                    background: linear-gradient(96deg, #006AAC 43.24%, #03F0D0 100%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-family: Manrope;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 800;
+                    line-height: normal;
+                    cursor: pointer;
+                }
+            }
+            #signupbtn, #signinbtn {
+                background: linear-gradient(256deg, #03F0D0 -16.4%, #006AAC 82.71%);
+                width: 200px;
+                height: 46px;
+                color: #FFF;
+                text-align: center;
+                font-family: Manrope;
+                font-size: 18px;
+                font-weight: 600;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: none;
+                margin: 2rem auto;
+            }
+
+            /* Switch between Sign-in/Sign-up text */
+            #showsignin, #showsignup {
+                background: linear-gradient(96deg, #006AAC 43.24%, #03F0D0 100%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-family: Manrope;
+                font-size: 16px;
+                font-weight: 800;
+                cursor: pointer;
+                text-align: center;
+            }
+            
+        }
+    
+
+    // Add general content styles
+    .content {
+        opacity: 0; // Start with opacity 0
+        transform: rotateY(-90deg); // Start off-screen to the left in 3D space
+        transition: opacity 0.5s ease, transform 0.5s ease; // Transition for opacity and transform
+
+        &.fade-in {
+            opacity: 1; // Fade in
+            transform: rotateY(0); // Rotate to original position
+        }
+
+        &.fade-out {
+            opacity: 0; // Fade out
+            transform: rotateY(90deg); // Rotate to the right
+        }
+    }
+
+.hideup {
+    transition: all 0.5s ease-in-out;
+    transform-origin: right;
+    transform: scale(0) rotateY(90deg) translateX(-100%)!important;
+    width: 0% !important;
+}
+
+.showup {
+    transition: all 0.5s ease-in-out;
+    transform-origin: center;
+    transform: scale(1) rotateY(0deg) translate(0)!important;
+    width: 100%;
+}

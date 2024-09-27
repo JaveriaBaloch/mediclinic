@@ -41,7 +41,7 @@ export default function Home() {
         <FooterSection />
 
         {role === null && (
-          <Link href="/DoctorLogin" className={styles.fixedbtn}>
+          <Link href="/doctorAccountCreation" className={styles.fixedbtn}>
             <p>Join as a Doctor</p>
           </Link>
         )}
