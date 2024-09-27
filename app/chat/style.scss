@@ -1,0 +1,124 @@
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+@import '@/scss/variables';
+
+#Chat {
+    .clients {
+        height: 80vh;
+        overflow-y: scroll;
+
+        &::-webkit-scrollbar {
+            background: white;
+        }
+
+        .client {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #f0f0f0;
+            }
+
+            .contact-image {
+                width: 70px;
+                @include circleDashedImage();
+            }
+
+            .text-holder {
+
+                // height: 1rem;
+                margin-top: 0.5rem;
+
+                .contact-name {
+                    color: #062635;
+                    font-family: Manrope;
+                    font-size: 18px;
+                    font-weight: 800;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                small {
+                    color: #949292;
+                    font-family: Manrope;
+                    font-size: 14px;
+                    font-weight: 800;
+                    margin: 0;
+                    padding: 0;
+                    margin-top: -29px;
+
+                }
+
+            }
+        }
+    }
+
+    .messages {
+        position: relative;
+        height: 80vh;
+        display: flex;
+        flex-direction: column;
+
+        .complete-message {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+
+        .attachments {
+            margin-bottom: 1rem;
+
+            .file-preview {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 10px;
+
+                img {
+                    width: 60px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    font-size: 1rem;
+                    color: #333;
+                    background-color: #f5f5f5;
+                    padding: 10px;
+                    border-radius: 8px;
+                    text-align: center;
+                }
+
+                .btn {
+                    display: block;
+                    width: fit-content;
+                    margin-top: 10px;
+                }
+            }
+        }
+
+        .input-area {
+            display: flex;
+            align-items: center;
+
+            input[type='text'] {
+                flex-grow: 1;
+            }
+
+            .form-control-file {
+                width: auto;
+                margin-left: 10px;
+            }
+
+            button {
+                margin-left: 10px;
+                border-radius: 50px;
+                background: linear-gradient(169deg, #03f0d0 -93.7%, #006aac 150.05%);
+            }
+        }
+    }
+}
