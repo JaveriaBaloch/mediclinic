@@ -1,0 +1,89 @@
+#HealthTips {
+    margin-top: 7rem;
+
+    .tips-holder {
+        overflow: hidden; // Hide overflow for smooth sliding
+        position: relative;
+
+        .tips-wrapper {
+            display: flex; // Use flex to arrange tips in a row
+            transition: transform 0.5s ease-in-out; // Smooth transition for sliding effect
+            width: 100%; // Full width
+
+            .tip {
+                min-width: 100%; // Each tip takes full width
+                display: flex; // Flex for vertical alignment
+                flex-direction: row; // Align items in a row
+                align-items: center; // Center items vertically
+
+                .tip-text {
+                    .tip-badge {
+                        border-radius: 30px;
+                        background: linear-gradient(261deg, #03F0D0 -17.28%, #006AAC 85.44%);
+                        width: 145px;
+                        margin-left: 1rem;
+                        flex-shrink: 0;
+
+                        p {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            padding: 0.25rem;
+                            color: #fff;
+                            font-family: Manrope;
+                            font-size: 14px;
+                            font-weight: 600;
+                        }
+                    }
+
+                    .tip-heading {
+                        font-family: Caveat;
+                        font-size: 3rem;
+                        font-weight: 700;
+                        background: linear-gradient(115deg, #006AAC -8.32%, #03F0D0 86.13%);
+                        background-clip: text;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        margin-top: 2rem;
+                        margin-bottom: 1rem;
+                    }
+
+                    .tip-para {
+                        color: #303030;
+                        font-family: Manrope;
+                        font-size: 18px;
+                        font-weight: 300;
+                        width: 80%;
+                        line-height: 1.5rem;
+                    }
+                }
+
+                .tip-image {
+                    width: 80%;
+                    margin-left: 5rem;
+                }
+            }
+        }
+    }
+
+    .tips-dots-holder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem auto;
+
+        .tip-dot {
+            &.active-tip {
+                width: 51px;
+                height: 14px;
+                border-radius: 60px;
+                background: linear-gradient(115deg, #006AAC 25.58%, #03F0D0 125.11%);
+            }
+            border-radius: 60px;
+            background: linear-gradient(115deg, #6DC2EE 25.58%, #03F0D0 125.11%);
+            width: 20px;
+            height: 14px;
+            margin: 0 0.5rem;
+        }
+    }
+}

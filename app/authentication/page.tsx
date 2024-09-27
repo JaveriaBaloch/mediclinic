@@ -122,6 +122,7 @@ const Auth = () => {
                 sessionStorage.setItem("username", result.user.username);
                 sessionStorage.setItem("profilePicture", result.user.profileImage);
                 sessionStorage.setItem("email", result.user.email);
+                sessionStorage.setItem("role", result.user.role);
 
 
             } else {
@@ -158,6 +159,8 @@ const Auth = () => {
                 sessionStorage.setItem("username", data.user.username);
                 sessionStorage.setItem("profilePicture", data.user.profileImage);
                 sessionStorage.setItem("email", data.user.email);
+                sessionStorage.setItem("role", data.user.role);
+
 
             } else {
                 setError(true)

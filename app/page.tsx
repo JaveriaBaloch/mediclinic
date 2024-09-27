@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Image from "next/image";
 import styles from "./page.module.css";
 import Navbar from "@/components/navbar";
@@ -11,24 +11,40 @@ import { HomepageFeaturedDoctorsSection } from "@/components/homepageSections/Do
 import { HomePageContactUsSection } from "@/components/contactus";
 import { FooterSection } from "@/components/Footer";
 import Link from "next/link";
+import { HomePageHealthTipSection } from "@/components/homepageSections/HomePageHealthTipSection";
+
 export default function Home() {
+  const role = sessionStorage.getItem("role");
+
   return (
-    <main >
+    <main>
       <section id="Home">
-        <Navbar activeItem={0}/>
-        <BannerHomePage/>
-        <WhyUsHomeSection/>
-        <HomePageServicesSection/>
-        <HomePageHowItWorksSection/>
-        <HomePageTestimonialsSection/>
-        <HomepageFeaturedDoctorsSection/>
-        <HomePageContactUsSection/>
-        <FooterSection/>
-        <Link href={'/DoctorLogin'} className={styles.fixedbtn}>
-        <p>
-        Join as a Doctor
-        </p>
-        </Link>
+        <Navbar activeItem={0} />
+        {role === null && (
+          <>
+            <BannerHomePage />
+            <WhyUsHomeSection />
+            <HomePageServicesSection />
+            <HomePageHowItWorksSection />
+            <HomePageTestimonialsSection />
+           
+            <HomePageContactUsSection />
+          </>
+        )}
+        {role === 'patient' && 
+        <>
+        <HomePageHealthTipSection />
+        <HomepageFeaturedDoctorsSection />
+        </>
+        }
+        
+        <FooterSection />
+
+        {role === null && (
+          <Link href="/DoctorLogin" className={styles.fixedbtn}>
+            <p>Join as a Doctor</p>
+          </Link>
+        )}
       </section>
     </main>
   );

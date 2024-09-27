@@ -1,0 +1,49 @@
+.calendar-scheduler {
+    margin: 2rem;
+  
+    h2 {
+      text-align: center;
+    }
+  
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr); // 1 for time, 7 for days
+      gap: 1rem;
+  
+      .header {
+        display: contents; // Allows proper alignment of headers
+  
+        .day-header {
+          background: #f1f1f1;
+          text-align: center;
+          font-weight: bold;
+          padding: 1rem;
+        }
+      }
+  
+      .time-slot {
+        display: contents; // Allows proper alignment of time labels
+  
+        .time-label {
+          font-weight: bold;
+          text-align: right;
+          padding: 1rem;
+          background: #f9f9f9;
+        }
+  
+        .calendar-cell {
+          border: 1px solid #ddd;
+          min-height: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+  
+          &.current-time-slot {
+            background: rgba(255, 0, 0, 0.1); // Highlight current time slot
+            border-color: red;
+          }
+        }
+      }
+    }
+  }
+  

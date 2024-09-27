@@ -1,0 +1,66 @@
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+@import '@/scss/variables';
+
+
+.appointment-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #FFF;
+    width: 13rem;
+    padding: 2rem 1rem;
+    text-decoration: none;
+    position: relative;
+    margin: 2rem;
+    border-radius: 16px;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(118, 118, 118, 0.25);
+    img{
+        width: 130px;
+        border-radius: 50%;
+        @include circleDashedImage();
+    }
+    .icon-holder{
+        background-color: $activestate-bg-primary;
+        width: 3.5rem;
+        height: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+    h4{
+        color: #062635;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+    }
+    small{
+        color: #949292;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+    p{
+        position: absolute;
+        top: 0.7rem;
+        right: 0.7rem;
+        border-radius: 50px;
+        border: 1px solid #006AAC;
+        background: #006AAC;
+        width: 65px;
+       color: #FFF;
+        flex-shrink: 0;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+}
