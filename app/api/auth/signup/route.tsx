@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { connectDB } from '@/lib/mongodb';
@@ -7,12 +8,13 @@ import {
     PutObjectCommand,
 } from "@aws-sdk/client-s3";
 
-const Bucket = process.env.S3_BUCKET;
+// Environment variables with NEXT_PUBLIC_ prefix
+const Bucket = process.env.NEXT_PUBLIC_S3_BUCKET;
 const s3 = new S3Client({
-    region: process.env.AWS_REGION,
+    region: process.env.NEXT_PUBLIC_AWS_REGION,
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+        accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY as string,
     },
 });
 
@@ -49,8 +51,8 @@ export async function POST(req: NextRequest) {
             Body: buffer, // Correctly set the Body to buffer
         }));
 
-        // Assuming s3Upload is a function that generates the image URL after uploading
-        const imageUrl = `https://${Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${profileImage.name}`;
+        // Generate the image URL after uploading
+        const imageUrl = `https://${Bucket}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${profileImage.name}`;
 
         // Create new user
         const newUser = await UserModel.create({

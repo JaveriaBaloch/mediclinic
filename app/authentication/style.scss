@@ -6,9 +6,11 @@
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
+    flex-direction: column;
     min-height: 100vh;
+    margin: 1rem;
     .container {
-        margin: 4rem; /* Your existing margin */
+        margin: 0rem; /* Your existing margin */
     border-radius: 1rem;
     background: #FFFFFF;
     overflow: hidden;

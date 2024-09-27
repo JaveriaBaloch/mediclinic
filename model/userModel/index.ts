@@ -24,6 +24,6 @@ const UserSchema = new Schema<IUser>({
   insuranceCards: { type: [String], default: [] },
 }, { collection: 'users' });
 
-const UserModel = models.User || model<IUser>('Users', UserSchema);
+const UserModel = models.Users || model<IUser>('Users', UserSchema);
 
 export default UserModel;

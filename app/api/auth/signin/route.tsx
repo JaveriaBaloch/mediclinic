@@ -32,14 +32,20 @@ export async function POST(req: NextRequest) {
             { expiresIn: '60d' }
         );
 
-        // Create a NextResponse object
-        const response = NextResponse.json({ message: 'Sign-in successful' }, { status: 200 });
+        // Omit password from the user object before sending it
+        const { password: _, ...userWithoutPassword } = user.toObject();
+
+        // Create a NextResponse object with the user object
+        const response = NextResponse.json({
+            message: 'Sign-in successful',
+            user: userWithoutPassword, // Send the user object without the password
+        }, { status: 200 });
 
         // Set the JWT token as a cookie
         response.cookies.set('authToken', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 24 * 3600 * 60,
+            maxAge: 24 * 3600 * 60, // 60 days in seconds
             path: '/',
         });
 

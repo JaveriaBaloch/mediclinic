@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Configure the S3 client
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-1',
+  region: process.env.NEXT_PUBLIC_AWS_REGION || 'us-east-1',
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -17,7 +17,7 @@ export const s3Upload = async (file: File): Promise<string> => {
   const fileName = `${uuidv4()}.${fileExtension}`;
 
   const uploadParams = {
-    Bucket: process.env.AWS_BUCKET_NAME!,
+    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
     Key: fileName,
     Body: Buffer.from(await file.arrayBuffer()), // Convert file to Buffer
     ContentType: file.type,
@@ -27,5 +27,5 @@ export const s3Upload = async (file: File): Promise<string> => {
   const command = new PutObjectCommand(uploadParams);
   await s3Client.send(command);
 
-  return `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${fileName}`; // Return the URL of the uploaded file
+  return `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.amazonaws.com/${fileName}`; // Return the URL of the uploaded file
 };
