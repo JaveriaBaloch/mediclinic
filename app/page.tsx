@@ -12,6 +12,7 @@ import { HomePageContactUsSection } from "@/components/contactus";
 import { FooterSection } from "@/components/Footer";
 import Link from "next/link";
 import { HomePageHealthTipSection } from "@/components/homepageSections/HomePageHealthTipSection";
+import { DoctorsHomeBanner } from "@/components/DoctorsHomeBanner";
 
 export default function Home() {
   const role = sessionStorage.getItem("role");
@@ -37,7 +38,12 @@ export default function Home() {
         <HomepageFeaturedDoctorsSection />
         </>
         }
-        
+        {
+          role == 'doctor'&&
+          <>
+          <DoctorsHomeBanner/>
+          </>
+        }
         <FooterSection />
 
         {role === null && (
