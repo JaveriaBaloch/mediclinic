@@ -44,7 +44,7 @@ const Navbar:React.FC<NavbarProps> = ({activeItem}) => {
             <li className="nav-item">
               <Link href="/doctors" className={`${"nav-link "} ${activeItem==1?'active':''}`} aria-current="page">
               <Icon icon={faStethoscope} size="1x" color='#062635'/>
-                <p>Doctors</p>
+              <p>{sessionStorage.getItem("role") === 'doctor' ? 'Patients':  'Doctors'}</p>
               </Link>
             </li>
             {sessionStorage.getItem("role") !=='doctor'&&

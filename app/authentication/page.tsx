@@ -85,6 +85,7 @@ const Auth = () => {
         }
 
         const formData = new FormData();
+        
         formData.append('username', username);
         formData.append('email', email);
         formData.append('password', password);
