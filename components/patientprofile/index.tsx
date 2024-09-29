@@ -42,7 +42,7 @@ const PatientProfile = () => {
                 } catch (err) {
                     console.error('Error fetching patient data:', err);
                     setError('Patient not found. Please fill in your details.');
-                    setFormData((prev) => ({ ...prev, patientId })); // Include patientId in form data
+                    setFormData((prev: any) => ({ ...prev, patientId })); // Include patientId in form data
                 } finally {
                     setLoading(false);
                 }
@@ -300,7 +300,7 @@ const PatientProfile = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Save</button>
+                <button type="submit" className="btn btn-gradient">Save</button>
             </form>
         </div>
     );
