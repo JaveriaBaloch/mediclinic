@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 // Define an interface for the Doctor model
-interface IDoctor extends Document {
+export interface IDoctor extends Document {
     doctorId: string;
     name: string;
     specialty: string;
@@ -21,8 +21,8 @@ const doctorSchema: Schema = new Schema({
     specialty: { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ }, // Basic email validation
-    profileImage: { type: String, required: true }, // S3 URL
-    documents: [{ type: String }], // Array of S3 URLs
+    profileImage: { type: String },  // S3 URL for the profile image
+    documents: { type: [String] },   // Array of S3 URLs for uploaded documents
     status: { type: String, default: 'pending', enum: ['pending', 'accepted', 'rejected'] }, // Enum for status
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

@@ -1,13 +1,48 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 
-// Define the schema for the Patient model
-const patientSchema = new mongoose.Schema({
+// Define the interface for a Patient document
+interface IPatient extends Document {
+    patientId: string;
+    name: string;
+    age: number;
+    gender: 'male' | 'female' | 'other';
+    dateOfBirth: Date;
+    phone: string;
+    email: string;
+    address: {
+        street: string;
+        city: string;
+        state: string;
+        zip: string;
+    };
+    emergencyContact: {
+        name: string;
+        relation: string;
+        phone: string;
+    };
+    insuranceProvider: {
+        name: string;
+        policyNumber: string;
+        coverage: string;
+    };
+    medicalHistory: {
+        condition: string;
+        dateDiagnosed: Date;
+        notes: string;
+    }[];
+    profileImage: string; // New field for profile image
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+// Define the schema
+const PatientSchema = new mongoose.Schema<IPatient>({
     patientId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     age: { type: Number, required: true },
     gender: { 
         type: String, 
-        enum: ['male', 'female', 'other'], // Enum for gender
+        enum: ['male', 'female', 'other'],
         required: true 
     },
     dateOfBirth: { type: Date, required: true },
@@ -34,9 +69,12 @@ const patientSchema = new mongoose.Schema({
         dateDiagnosed: { type: Date },
         notes: { type: String }
     }],
+    profileImage: { type: String }, // New field for profile image
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 });
 
-const Patient = mongoose.models.Patient || mongoose.model('Patient', patientSchema);
+// Create the Patient model or use the existing one
+const Patient: Model<IPatient> = mongoose.models.Patient || mongoose.model<IPatient>('Patient', PatientSchema);
+
 export default Patient;

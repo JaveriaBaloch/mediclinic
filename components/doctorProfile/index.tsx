@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+'use client';
+
+import React, { ChangeEventHandler, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const DoctorProfile: React.FC = () => {
@@ -9,8 +11,10 @@ const DoctorProfile: React.FC = () => {
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [profileImage, setProfileImage] = useState<File | null>(null);
-    const [uploadedDocs, setUploadedDocs] = useState<File[]>([]); // For displaying selected documents
+    const [uploadedDocs, setUploadedDocs] = useState<File[]>([]);
     const [message, setMessage] = useState('');
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false); // New loading state
 
     useEffect(() => {
         const id = sessionStorage.getItem('_id');
@@ -21,6 +25,7 @@ const DoctorProfile: React.FC = () => {
     }, []);
 
     const fetchDoctorProfile = async (id: string) => {
+        setLoading(true); // Start loading
         try {
             const response = await fetch(`/api/doctors/getProfile?doctorId=${id}`);
             const data = await response.json();
@@ -30,47 +35,60 @@ const DoctorProfile: React.FC = () => {
                 setSpecialty(data.specialty);
                 setPhone(data.phone);
                 setEmail(data.email);
-                setProfileImage(data.profileImage);
-                // Load documents from the existing profile, if any
-                const docFiles = data.documents.map((doc: string) => new File([], doc)); // Mocking File objects from URLs
+                if (data.profileImage) {
+                    setProfileImage(new File([], data.profileImage)); // Adjust this if needed
+                }
+                const docFiles = data.documents.map((doc: string) => new File([], doc)); // Adjust if necessary
                 setUploadedDocs(docFiles);
             } else {
+                setError(true);
                 setMessage(data.message || 'Doctor not found. Please fill in your details.');
             }
         } catch (error) {
             console.error('Error fetching doctor profile:', error);
+            setError(true);
             setMessage('Error fetching doctor profile.');
+        } finally {
+            setLoading(false); // End loading
         }
     };
-
+      const handleProfileImageChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+           const files = event.target.files;
+           if (files && files.length > 0) {
+               setProfileImage(files[0]);
+           } else {
+               setProfileImage(null); // Reset if no file selected
+           }
+       };
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            setUploadedDocs((prevDocs) => [...prevDocs, file]); // Add the new file to the uploaded documents
-            event.target.value = ''; // Clear the input to allow re-uploading the same file
+            setUploadedDocs((prevDocs) => [...prevDocs, file]);
+            event.target.value = ''; // Clear input for same file uploads
         }
     };
 
     const handleRemoveDocument = (index: number) => {
-        setUploadedDocs((prevDocs) => prevDocs.filter((_, i) => i !== index)); // Remove document at index
+        setUploadedDocs((prevDocs) => prevDocs.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-    
         const formData = new FormData();
         formData.append('doctorId', doctorId || '');
         formData.append('name', name);
         formData.append('specialty', specialty);
         formData.append('phone', phone);
-        formData.append('profileImage', profileImage as Blob);
         formData.append('email', email);
-    
-        // Append uploaded documents to FormData
+        
+        if (profileImage) {
+            formData.append('profileImage', profileImage);
+        }
+
         uploadedDocs.forEach((doc) => {
-            formData.append('files', doc); // Append actual File objects
+            formData.append('files', doc);
         });
-    
+        setLoading(true); // Start loading
         try {
             const response = await fetch('/api/doctors/createOrUpdate', {
                 method: 'POST',
@@ -78,78 +96,69 @@ const DoctorProfile: React.FC = () => {
             });
             const data = await response.json();
             setMessage(data.message);
-    
             if (response.ok) {
-                setUploadedDocs([]); // Clear the document list after submission
-                setProfileImage(null); // Clear the profile image
+                setUploadedDocs([]);
+                setProfileImage(null);
             } else {
+                setError(true);
                 setMessage(data.message || 'Failed to update profile.');
             }
         } catch (error) {
             console.error('Error saving doctor profile:', error);
+            setError(true);
             setMessage('Error saving doctor profile.');
+        } finally {
+            setLoading(false); // End loading
         }
     };
 
     return (
         <div className="container mt-5">
             <h2>Doctor Profile</h2>
-            {message && <div className="alert alert-info">{message}</div>}
+            {loading && <p>Loading...</p>} {/* Loading state */}
+            {message && <div className={`alert ${error ? 'alert-danger' : 'alert-info'}`}>{message}</div>}
             <form onSubmit={handleSubmit}>
+                <input
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                />
+                <input
+                    placeholder="Specialty"
+                    value={specialty}
+                    onChange={(e) => setSpecialty(e.target.value)}
+                    required
+                />
+                <input
+                    placeholder="Phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                />
+                <input
+                    placeholder="Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                {profileImage && (
+                    <div>
+                        <h5>Current Profile Picture:</h5>
+                        <img src={URL.createObjectURL(profileImage)} alt="Profile" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+                    </div>
+                )}
                 <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Name</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
+                <input
+    type="file"
+    onChange={handleProfileImageChange}
+    accept="image/*"
+/>
+
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="specialty" className="form-label">Specialty</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="specialty"
-                        value={specialty}
-                        onChange={(e) => setSpecialty(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="phone" className="form-label">Phone</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="phone"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="profilePicture" className="form-label">Profile Picture</label>
-                    <input
-                        type="file"
-                        className="form-control"
-                        id="profilePicture"
-                        accept="image/*"
-                        onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
-                    />
-                </div>
+
+                
                 <div className="mb-3">
                     <label htmlFor="documents" className="form-label">Upload Document</label>
                     <input
@@ -165,7 +174,7 @@ const DoctorProfile: React.FC = () => {
                 <ul className="list-group mb-3">
                     {uploadedDocs.map((doc, index) => (
                         <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                            {doc.name} {/* Display the file name */}
+                            {doc.name}
                             <button
                                 className="btn btn-danger btn-sm"
                                 onClick={() => handleRemoveDocument(index)}

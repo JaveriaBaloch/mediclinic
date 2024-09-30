@@ -53,7 +53,7 @@ export const DoctorsHomeBanner = () => {
         },
     ];
 
-    const handleSelect = (ranges: RangeKeyDict) => {
+    const handleSelect = (ranges: any) => {
         setRange([ranges.selection]);
     };
 

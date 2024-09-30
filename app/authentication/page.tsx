@@ -8,8 +8,10 @@ import './style.scss';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SectionHeadings } from '@/components/sectionHeadings';
 import { InputField } from '@/components/input';
+import { useRouter } from 'next/navigation';
 
 const Auth = () => {
+    const router = useRouter()
     const [currentContent, setCurrentContent] = useState(1);
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -124,6 +126,8 @@ const Auth = () => {
                 sessionStorage.setItem("profilePicture", result.user.profileImage);
                 sessionStorage.setItem("email", result.user.email);
                 sessionStorage.setItem("role", result.user.role);
+
+                router.push('/profile')
 
 
             } else {

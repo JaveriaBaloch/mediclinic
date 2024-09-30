@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 import { connectDB } from '@/lib/mongodb';
 import Doctor from '@/model/doctorModal';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
@@ -15,11 +14,11 @@ const s3 = new S3Client({
 });
 
 // Function to upload a file to S3
-const uploadFileToS3 = async (file: File, prefix: string) => {
+const uploadFileToS3 = async (file: File): Promise<string> => {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const timestamp = Date.now();
-    const s3Key = `${prefix}/${timestamp}_${file.name}`;
+    const s3Key = `${timestamp}_${file.name}`; // Prefix with timestamp to ensure uniqueness
 
     await s3.send(new PutObjectCommand({
         Bucket,
@@ -28,6 +27,7 @@ const uploadFileToS3 = async (file: File, prefix: string) => {
         ContentType: file.type,
     }));
 
+    // Return the URL of the uploaded file
     return `https://${Bucket}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${s3Key}`;
 };
 
@@ -35,40 +35,45 @@ export async function POST(req: NextRequest) {
     try {
         const data = await req.formData();
         const { doctorId, name, specialty, phone, email } = Object.fromEntries(data);
-        const profileImage = data.get('profileImage') as File;
+        const profileImage = data.get('profileImage') as File | null;
         const documents = data.getAll('files') as File[];
 
-        // Validate input
+        // Validate required fields
         if (!doctorId || !name || !specialty || !phone || !email) {
+            console.error('Validation failed:', { doctorId, name, specialty, phone, email });
             return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
         }
 
         await connectDB();
 
         // Upload profile image if provided
-        let profileImageUrl = '';
+        let profileImageUrl: string | null = null;
         if (profileImage) {
-            profileImageUrl = await uploadFileToS3(profileImage, 'doctors/profileImages');
+            profileImageUrl = await uploadFileToS3(profileImage);
+            console.log('Profile Image URL:', profileImageUrl);
         }
 
         // Upload documents
-        const documentUrls = await Promise.all(documents.map(doc => uploadFileToS3(doc, 'doctors/documents')));
+        const documentUrls = await Promise.all(
+            documents.map(doc => uploadFileToS3(doc))
+        );
 
-        // Create or update doctor profile
+        // Prepare doctor data for insertion
         const doctorData = {
             doctorId,
             name,
             specialty,
             phone,
             email,
-            profileImage: profileImageUrl,
+            profileImage: profileImageUrl, // Use the uploaded profile image URL
             documents: documentUrls,
         };
 
+        // Create or update the doctor profile in the database
         const existingDoctor = await Doctor.findOneAndUpdate(
-            { doctorId },
-            doctorData,
-            { new: true, upsert: true } // Create a new doc if not found
+            { doctorId },  // Match the doctor by doctorId
+            { $set: doctorData },  // Use $set to update specific fields
+            { new: true, upsert: true }  // Return the updated document and create if not found
         );
 
         return NextResponse.json({ message: 'Profile saved successfully!', doctor: existingDoctor }, { status: 200 });
