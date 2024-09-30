@@ -5,7 +5,7 @@ import Image from 'next/image';  // Next.js optimized image component
 import Link from 'next/link';    // Next.js link component for internal routing
 import './scss/navbar.scss'; // Adjust path if necessary
 import { Icon } from './icons/icon';
-import { faCalendar, faCartPlus, faCartShopping, faComment, faComments, faHome, faKitMedical, faStethoscope } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faCartPlus, faComments, faHome, faKitMedical, faStethoscope } from '@fortawesome/free-solid-svg-icons';
 
 
 interface NavbarProps {
@@ -63,7 +63,7 @@ const Navbar:React.FC<NavbarProps> = ({activeItem}) => {
             </Link>
             </li>
             }
-            {(sessionStorage.getItem("role") =='patient'|| sessionStorage.getItem("role") =='doctor')&&
+            {sessionStorage.getItem("role") !==null&&
              <li className="nav-item">
             <Link href="/chat" className={`${"nav-link "} ${activeItem==4?'active':''}`} aria-current="page">
             <Icon icon={faComments} size="1x" color='#062635'/>

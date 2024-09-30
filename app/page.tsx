@@ -13,6 +13,7 @@ import { FooterSection } from "@/components/Footer";
 import Link from "next/link";
 import { HomePageHealthTipSection } from "@/components/homepageSections/HomePageHealthTipSection";
 import { DoctorsHomeBanner } from "@/components/DoctorsHomeBanner";
+import { AdminHomePageView } from "@/components/admin";
 
 export default function Home() {
   const role = sessionStorage.getItem("role");
@@ -28,14 +29,13 @@ export default function Home() {
             <HomePageServicesSection />
             <HomePageHowItWorksSection />
             <HomePageTestimonialsSection />
-           
+            <HomepageFeaturedDoctorsSection />
             <HomePageContactUsSection />
           </>
         )}
         {role === 'patient' && 
         <>
         <HomePageHealthTipSection />
-        <HomepageFeaturedDoctorsSection />
         </>
         }
         {
@@ -43,6 +43,11 @@ export default function Home() {
           <>
           <DoctorsHomeBanner/>
           </>
+        }
+        {role === 'admin' && 
+        <>
+        <AdminHomePageView/>
+        </>
         }
         <FooterSection />
 

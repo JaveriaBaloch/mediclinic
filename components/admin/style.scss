@@ -1,0 +1,110 @@
+@import '@/scss/variables';
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+
+#adminview {
+    padding-top: 2rem;
+
+    .small-heading {
+        color: #006AAC;
+        font-family: Manrope;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+
+    .doctor-card-admin {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        background-color: #FFF;
+        width: 32rem;
+        border-radius: 30px;
+        background: #FFF;
+
+        .doctor-image {
+            width: 120px;
+            @include circleDashedImage();
+        }
+
+        h5 {
+            color: #062635;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 20px;
+            margin: 0.5rem 0;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+
+        .specialization {
+            color: #9C9C9C;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 800;
+            line-height: normal;
+        }
+
+        .status {
+            padding: 0.2rem 0.9rem;
+            margin: 0;
+            border-radius: 2rem;
+        }
+
+        .list-group {
+            height: inherit;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            background: #e4e4e4;
+            padding: 0rem 0;
+            height: 11rem;
+            width: 15rem !important;
+
+            .list-group-item {
+                border: 0;
+                border-bottom: 1px #c4c4c4 solid;
+                border-radius: 0;
+            }
+
+            a {
+                text-decoration: none;
+                color: #010101;
+            }
+
+            // Custom scrollbar styling
+            &::-webkit-scrollbar {
+                width: 7px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background-color: #f1f1f1; // Background color of the scrollbar track
+                border-radius: 1rem;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: linear-gradient(51deg, #03F0D0 -17.28%, #006AAC 85.44%);                
+                border-radius: 6px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(31deg, #03F0D0 -17.28%, #006AAC 85.44%);            }
+        }
+        .icon-holder{
+            background: linear-gradient(31deg, #03F0D0 -17.28%, #006AAC 85.44%);            
+            padding: 1rem 1.3rem;
+            border-radius: 3rem;
+
+        }
+        .icon-button{
+            background:  #03F0D0;            
+            border: 0;
+            height: fit-content;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+        }
+    }
+}

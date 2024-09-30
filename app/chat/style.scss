@@ -26,8 +26,6 @@
             }
 
             .text-holder {
-
-                // height: 1rem;
                 margin-top: 0.5rem;
 
                 .contact-name {
@@ -36,7 +34,6 @@
                     font-size: 18px;
                     font-weight: 800;
                     margin: 0;
-                    padding: 0;
                 }
 
                 small {
@@ -44,12 +41,8 @@
                     font-family: Manrope;
                     font-size: 14px;
                     font-weight: 800;
-                    margin: 0;
-                    padding: 0;
-                    margin-top: -29px;
-
+                    margin: -29px 0 0 0; // Adjusted margin for better readability
                 }
-
             }
         }
     }
@@ -57,9 +50,57 @@
     .messages {
         position: relative;
         height: 80vh;
-        overflow-y: scroll;
         display: flex;
         flex-direction: column;
+
+        .message-list {
+            height: 68vh;
+            overflow-y: scroll;
+
+            // Custom scrollbar styles for WebKit browsers (Chrome, Safari)
+            &::-webkit-scrollbar {
+                width: 10px; // Width of the scrollbar
+            }
+
+            &::-webkit-scrollbar-track {
+                background: #f1f1f1; // Color of the scrollbar track
+                border-radius: 5px; // Rounded corners for the track
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: linear-gradient(261deg, #03F0D0 -17.28%, #006AAC 85.44%); // Color of the scrollbar thumb
+                border-radius: 5px; // Rounded corners for the thumb
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: #000000; // Color of the thumb on hover
+            }
+
+            // For Firefox
+            scrollbar-width: thin; // Make the scrollbar thinner
+            scrollbar-color: #888 #f1f1f1; // Thumb color and track color
+
+            .my-message,.not-my-message {
+                background: #c7fff8;
+                text-align: right;
+                width: 20rem;
+                margin-left: auto;
+                padding: 0.5rem 1rem;
+                margin-right: 1rem;
+                border-radius: 1rem ;
+
+                .text {
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                }
+            }
+            .not-my-message{
+                background: #c7d1ff;
+                margin-right: auto;
+                margin-left: 1rem;
+                border-radius: 1rem ;
+            }
+        }
 
         .complete-message {
             position: absolute;
@@ -67,6 +108,7 @@
             width: 100%;
             background: #f0f0f0;
             border-radius: 8px;
+            padding: 1rem; // Added padding for better layout
         }
 
         .attachments {
