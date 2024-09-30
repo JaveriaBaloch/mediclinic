@@ -1,0 +1,39 @@
+[
+    {
+      "id": 1,
+      "name": "Paracetamol",
+      "price": 5.99,
+      "picture": "/images/Pharmacy/paracetamol.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Ibuprofen",
+      "price": 7.49,
+      "picture": "/images/Pharmacy/ibuprofen.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Aspirin",
+      "price": 4.99,
+      "picture": "/images/Pharmacy/aspirin.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Cough Syrup",
+      "price": 6.99,
+      "picture": "/images/Pharmacy/cough_syrup.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Vitamin C",
+      "price": 8.99,
+      "picture": "/images/Pharmacy/vitamin_c.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Bandages",
+      "price": 2.49,
+      "picture": "/images/Pharmacy/bandages.jpg"
+    }
+  ]
+  

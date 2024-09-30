@@ -19,7 +19,9 @@
         width: 9rem;
         height: 9rem;
         @include circleDashedImage();
-        border-width: 0.8rem;
+        background-size: cover;       // Das Bild füllt den gesamten Kreis
+        background-position: center;  // Das Bild wird zentriert
+        background-repeat: no-repeat;
     }
     h4{
         color: #062635;
@@ -48,4 +50,7 @@
         padding: 0.6rem 2rem;
         border-radius: 3rem;
     }
+    #Doctors {
+        padding-top: 120px !important;  // Stelle sicher, dass der Inhalt unterhalb der Navbar angezeigt wird
+      }        
 }

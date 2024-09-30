@@ -3,10 +3,11 @@
 /* Navbar Styles */
 .navbar {
   position: fixed;
-  top: 1rem;
+  top: 0;
   left: 1rem;
   width: 97%;
-  z-index: 3;
+  height: 80px;
+  z-index: 1000;
   &.navbar-expand-xl {
     background-color: white;
     border-radius: 50px;

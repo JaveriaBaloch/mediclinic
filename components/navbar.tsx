@@ -1,105 +1,139 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Image from 'next/image';  // Next.js optimized image component
-import Link from 'next/link';    // Next.js link component for internal routing
-import './scss/navbar.scss'; // Adjust path if necessary
+import Image from 'next/image';  
+import Link from 'next/link';   
+import './scss/navbar.scss'; 
 import { Icon } from './icons/icon';
-import { faCalendar, faCartPlus, faComments, faHome, faKitMedical, faStethoscope } from '@fortawesome/free-solid-svg-icons';
+import { faCartPlus, faHome, faKitMedical, faStethoscope } from '@fortawesome/free-solid-svg-icons';
 
-
-interface NavbarProps {
-  activeItem:number
+// Typen für den Warenkorb definieren
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  picture: string;
 }
 
-const Navbar:React.FC<NavbarProps> = ({activeItem}) => {
-  const img = sessionStorage.getItem("profilePicture");
-  const username = sessionStorage.getItem("username");
+interface CartItem {
+  product: Product;
+  quantity: number;
+}
 
+interface Cart {
+  [key: number]: CartItem;
+}
+
+interface NavbarProps {
+  activeItem: number;
+  cart?: Cart;  // Das `cart`-Prop ist optional
+  removeFromCart?: (productId: number) => void; // Funktion zum Entfernen von Produkten optional machen
+}
+
+const Navbar: React.FC<NavbarProps> = ({ activeItem, cart, removeFromCart }) => {
   useEffect(() => {
-    // Dynamically import Bootstrap JS on client side only
     if (typeof window !== 'undefined') {
       import('bootstrap/dist/js/bootstrap.bundle.min.js' as string);
     }
   }, []);
+
+  // Berechnung des Gesamtpreises
+  const totalPrice = cart
+    ? Object.values(cart).reduce((total, { quantity, product }) => {
+        return total + quantity * product.price;
+      }, 0)
+    : 0;
+
   return (
     <nav className="navbar navbar-expand-xl px-3 bg-white py-2">
       <div className="container-fluid pb-1 px-3">
         <Link href="/" className="navbar-brand">
           <Image src="/images/TestLogo.png" alt="Logo" width={130} height={50} className="logo" />
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
 
         <div className="collapse navbar-collapse" id="navbarNav">
-          {/* First Navigation Group */}
           <ul className="navbar-nav mx-auto justify-content-center align-items-center">
             <li className="nav-item">
-              <Link href="/" className={`${"nav-link "} ${activeItem==0?'active':''}`}>
-                <Icon icon={faHome} size="1x" color='#062635'/>
+              <Link href="/" className={`${'nav-link '} ${activeItem == 0 ? 'active' : ''}`}>
+                <Icon icon={faHome} size="1x" color="#062635" />
                 <p>Home</p>
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/doctors" className={`${"nav-link "} ${activeItem==1?'active':''}`} aria-current="page">
-              <Icon icon={faStethoscope} size="1x" color='#062635'/>
-              <p>{sessionStorage.getItem("role") === 'doctor' ? 'Patients':  'Doctors'}</p>
+              <Link href="/doctors" className={`${'nav-link '} ${activeItem == 1 ? 'active' : ''}`} aria-current="page">
+                <Icon icon={faStethoscope} size="1x" color="#062635" />
+                <p>Doctors</p>
               </Link>
             </li>
-            {sessionStorage.getItem("role") !=='doctor'&&
             <li className="nav-item">
-              <Link href="/pharmacy" className={`${"nav-link "} ${activeItem==2?'active':''}`}>
-                <Icon icon={faKitMedical} size="1x" color='#062635'/>
+              <Link href="/pharmacy" className={`${'nav-link '} ${activeItem == 2 ? 'active' : ''}`}>
+                <Icon icon={faKitMedical} size="1x" color="#062635" />
                 <p>Pharmacy</p>
               </Link>
             </li>
-}
-            {(sessionStorage.getItem("role") =='patient'|| sessionStorage.getItem("role") =='doctor')&&
-            <li className="nav-item">
-            <Link href="/schedule" className={`${"nav-link "} ${activeItem==3?'active':''}`} aria-current="page">
-            <Icon icon={faCalendar} size="1x" color='#062635'/>
-              <p>Schedule</p>
-            </Link>
-            </li>
-            }
-            {sessionStorage.getItem("role") !==null&&
-             <li className="nav-item">
-            <Link href="/chat" className={`${"nav-link "} ${activeItem==4?'active':''}`} aria-current="page">
-            <Icon icon={faComments} size="1x" color='#062635'/>
-              <p>Message</p>
-            </Link>
-            </li>
-            }
           </ul>
 
-          {/* Second Navigation Group */}
+          {/* Dropdown-Menü für den Warenkorb */}
           <ul className="navbar-nav justify-content-center align-items-center">
-            <li className="nav-item p-0 me-3">
-              <Link href="/cart" className="nav-link p-0 ps-2">
+            <li className="nav-item dropdown p-0 me-3">
+              <a
+                href="#"
+                className="nav-link dropdown-toggle"
+                id="cartDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 <div className="cart-icon-holder">
-                <Icon icon={faCartPlus} size="xl" color='#006AAC'/>
+                  <Icon icon={faCartPlus} size="xl" color="#006AAC" />
                 </div>
-              </Link>
+              </a>
+
+              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown">
+                {Object.keys(cart || {}).length === 0 ? (
+                  <li className="dropdown-item">Cart is empty</li>
+                ) : (
+                  <>
+                    {Object.values(cart!).map(({ product, quantity }) => (
+                      <li key={product.id} className="dropdown-item">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span>
+                            {product.name} - {quantity} x ${product.price.toFixed(2)}
+                          </span>
+                          {/* Remove-Button im Dropdown-Menü */}
+                          {removeFromCart && (
+                            <button
+                              className="btn btn-danger btn-sm ms-3"
+                              onClick={() => removeFromCart(product.id)} 
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                    <li className="dropdown-divider"></li>
+                    <li className="dropdown-item">
+                      <strong>Total: ${totalPrice.toFixed(2)}</strong>
+                    </li>
+                    <li className="dropdown-item text-center">
+                      <button className="btn btn-primary">Checkout</button>
+                    </li>
+                  </>
+                )}
+              </ul>
             </li>
-            {(sessionStorage.getItem("role") =='patient' || sessionStorage.getItem("role") =='doctor')&&
-              <li className="nav-item p-0 me-3">
-                <Link href="/profile" className="nav-link p-0 ps-2 d-flex justify-content-center align-items-center flex-column">
-                    <img src={img?img:''} width={45} alt="" style={{
-                      borderRadius:'50%'
-                    }}/>
-                    <b style={{
-                      color: '#062635',
-                      textAlign: 'center',
-                      fontFamily: 'Manrope',
-                      fontSize: '14px',
-                      fontStyle: 'normal',
-                      fontWeight: '700'
-                    
-                    }}>{username}</b>
-                </Link>
-              </li>
-            }
           </ul>
         </div>
       </div>
@@ -108,3 +142,5 @@ const Navbar:React.FC<NavbarProps> = ({activeItem}) => {
 };
 
 export default Navbar;
+
+
