@@ -1,0 +1,12 @@
+@import '@/scss/variables';
+@import '@/scss/fonts';
+@import '@/scss/mixins';
+
+.pagination{
+    button.pagination-btn{
+        background:'#01F0D0';
+    }
+    button.pagination-btn.active{
+        background:'#01F0D0';
+    }
+}
