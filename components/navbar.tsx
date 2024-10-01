@@ -47,15 +47,8 @@ const Navbar:React.FC<NavbarProps> = ({activeItem}) => {
               <p>{sessionStorage.getItem("role") === 'doctor' ? 'Patients':  'Doctors'}</p>
               </Link>
             </li>
-            {sessionStorage.getItem("role") !=='doctor'&&
-            <li className="nav-item">
-              <Link href="/pharmacy" className={`${"nav-link "} ${activeItem==2?'active':''}`}>
-                <Icon icon={faKitMedical} size="1x" color='#062635'/>
-                <p>Pharmacy</p>
-              </Link>
-            </li>
-}
-            {(sessionStorage.getItem("role") =='patient'|| sessionStorage.getItem("role") =='doctor')&&
+         
+            {(sessionStorage.getItem("role") =='patient')&&
             <li className="nav-item">
             <Link href="/schedule" className={`${"nav-link "} ${activeItem==3?'active':''}`} aria-current="page">
             <Icon icon={faCalendar} size="1x" color='#062635'/>
@@ -82,7 +75,7 @@ const Navbar:React.FC<NavbarProps> = ({activeItem}) => {
                 </div>
               </Link>
             </li>
-            {(sessionStorage.getItem("role") =='patient' || sessionStorage.getItem("role") =='doctor')&&
+            {(sessionStorage.getItem("role") !=null)&&
               <li className="nav-item p-0 me-3">
                 <Link href="/profile" className="nav-link p-0 ps-2 d-flex justify-content-center align-items-center flex-column">
                     <img src={img?img:''} width={45} alt="" style={{

@@ -127,7 +127,7 @@ const AdminLogin = () => {
                 sessionStorage.setItem("email", result.user.email);
                 sessionStorage.setItem("role", result.user.role);
 
-                router.push('/')
+                router.push('/profile')
 
 
             } else {

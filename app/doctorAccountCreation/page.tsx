@@ -8,6 +8,7 @@ import './style.scss';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SectionHeadings } from '@/components/sectionHeadings';
 import { InputField } from '@/components/input';
+import { useRouter } from 'next/navigation';
 
 const DoctorAuth = () => {
     const [currentContent, setCurrentContent] = useState(1);
@@ -19,6 +20,7 @@ const DoctorAuth = () => {
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [isSignUp, setIsSignUp] = useState(true); // Track whether Sign-Up or Sign-In is displayed
     const [message, setMessage] = useState("");
+    const router = useRouter()
 
 
     useEffect(() => {
@@ -124,7 +126,7 @@ const DoctorAuth = () => {
                 sessionStorage.setItem("email", result.user.email);
                 sessionStorage.setItem("role", result.user.role);
 
-
+                router.push('/profile')
             } else {
                 setError(true)
                 setMessage(result.message || "An error occurred during signup.");
@@ -160,7 +162,7 @@ const DoctorAuth = () => {
                 sessionStorage.setItem("profilePicture", data.user.profileImage);
                 sessionStorage.setItem("email", data.user.email);
                 sessionStorage.setItem("role", data.user.role);
-
+                router.push('/')
 
             } else {
                 setError(true)

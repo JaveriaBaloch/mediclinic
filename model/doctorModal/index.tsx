@@ -2,6 +2,9 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 // Define an interface for the Doctor model
 export interface IDoctor extends Document {
+    date: string | number | Date;
+    availableTime: string;
+    appointmentType: string;
     doctorId: string;
     name: string;
     specialty: string;

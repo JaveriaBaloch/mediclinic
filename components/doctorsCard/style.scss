@@ -4,12 +4,13 @@
 
 .doctor-card{
     margin: 1rem;
+    position: relative;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items:center;
-    width: 16rem;
+    width: 17rem;
     height: 20rem;
     flex-shrink: 0;
     border-radius: 16px;
@@ -47,5 +48,24 @@
         color: #FFF;
         padding: 0.6rem 2rem;
         border-radius: 3rem;
+    }
+    .time{
+        background: $accent-color-green;
+        padding: 0.2rem 1rem;
+        border-radius: 1rem;
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+    }
+    .date{
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0.4rem;
+    }
+    .type{
+        background: orange;
+        padding: 0.2rem 1rem;
+        border-radius: 1rem;
+        margin: 0;
     }
 }
