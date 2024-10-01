@@ -9,24 +9,42 @@ import Navbar from '@/components/navbar';
 import { IDoctor } from '@/model/doctorModal';
 import { AppointmentCard } from '@/components/meetings';
 import { useRouter } from 'next/navigation';
-import './style.scss'
-const Appointments = () => {
+import './style.scss';
+
+const Appointments: React.FC = () => {
     const [appointments, setAppointments] = useState<IAppointment[]>([]);
     const [doctors, setDoctors] = useState<IDoctor[]>([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [specializations, setSpecializations] = useState<string[]>([]); // Specializations state
-    const [selectSpecialization, setSelectedSpecialization] = useState<string>(''); 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [specializations, setSpecializations] = useState<string[]>([]);
+    const [selectedSpecialization, setSelectedSpecialization] = useState<string>(''); 
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const appointmentsPerPage = 10;
     const router = useRouter();
+
+    const handleCancel = async (id: string) => {
+        try {
+            const response = await fetch(`/api/appointments/cancel?id=${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                setAppointments(prev => prev.filter(appointment => appointment._id !== id));
+            } else {
+                const errorData = await response.json();
+                console.error('Failed to cancel appointment:', errorData.message);
+            }
+        } catch (error) {
+            console.error('Failed to cancel appointment:', error);
+        }
+    };
+    
 
     useEffect(() => {
         const fetchData = async () => {
             const role = sessionStorage.getItem('role');
             const id = sessionStorage.getItem('_id');
             try {
-                if (role === 'doctor') {
+                if (role === 'doctor' && id) {
                     const response = await axios.get(`/api/appointments/getAllDoctorsById?id=${id}`);
                     if (response.data.success) {
                         setAppointments(response.data.appointments);
@@ -43,19 +61,18 @@ const Appointments = () => {
         fetchData();
     }, []);
 
-    // Fetching featured doctors
     const fetchFeaturedDoctors = async () => {
         try {
             const response = await axios.get('/api/doctors/getAll');
-            const doctors = response.data;
-            setSpecializations(Array.from(new Set(doctors.map((doctor: IDoctor) => doctor.specialty))));
-            setDoctors(doctors);
+            const doctorsData: IDoctor[] = response.data;
+            setSpecializations(Array.from(new Set(doctorsData.map(doctor => doctor.specialty))));
+            setDoctors(doctorsData);
         } catch (error) {
             console.error('Error fetching featured doctors:', error);
         }
     };
+    
 
-    // Function to add a contact
     const handleAddContact = async (doctorId: string, receiverProfileImage: string, receiverName: string) => {
         const profilePicture = sessionStorage.getItem('profilePicture') || '';
         const userId = sessionStorage.getItem('_id') || '';
@@ -84,7 +101,6 @@ const Appointments = () => {
         }
     };
 
-    // Filter logic for appointments and doctors
     const filteredAppointments = appointments.filter(appointment => {
         const matchName = appointment.name?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchCategory = selectedCategory ? appointment.appointmentType === selectedCategory : true;
@@ -93,11 +109,10 @@ const Appointments = () => {
 
     const filteredDoctors = doctors.filter(doctor => {
         const matchName = doctor.name?.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchSpecialization = selectSpecialization ? doctor.specialty === selectSpecialization : true;
+        const matchSpecialization = selectedSpecialization ? doctor.specialty === selectedSpecialization : true;
         return matchName && matchSpecialization;
     });
 
-    // Pagination logic for appointments and doctors
     const indexOfLastAppointment = currentPage * appointmentsPerPage;
     const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
     const currentAppointments = filteredAppointments.slice(indexOfFirstAppointment, indexOfLastAppointment);
@@ -109,7 +124,7 @@ const Appointments = () => {
     return (
         <div className="container mt-5 pt-5">
             <Navbar activeItem={1} />
-            {sessionStorage.getItem('role') == 'doctor' && (
+            {sessionStorage.getItem('role') === 'doctor' && (
                 <div className="mt-5 pt-5">
                     <SectionHeadings text="Appointments" color="#062635" align="flex-content-start" />
                     <div className="input-group mb-3">
@@ -136,16 +151,17 @@ const Appointments = () => {
             <div className="row">
                 {sessionStorage.getItem('role') === 'doctor' ? (
                     currentAppointments.length > 0 ? (
-                        currentAppointments.map((appointment, i) => (
+                        currentAppointments.map((appointment,i) => (
                             <div className="col-md-4 mb-4" key={i}>
                                 <AppointmentCard
                                     img={appointment.imageUrl || ''}
                                     name={appointment.name}
                                     specialization={appointment.specialization || ''}
-                                    id={appointment.doctorId}
+                                    id={appointment._id}
                                     time={new Date(appointment.appointmentTime).toLocaleString()}
                                     appointmentType={appointment.appointmentType}
                                     handleComment={handleAddContact}
+                                    handleCancel={handleCancel} // Pass handleCancel directly
                                 />
                             </div>
                         ))
@@ -155,7 +171,7 @@ const Appointments = () => {
                         </div>
                     )
                 ) : (
-                  <></>
+                    <></>
                 )}
                 {(!sessionStorage.getItem('role') || sessionStorage.getItem('role') === 'patient') && (
                     <div className="mt-5 py-1">
@@ -171,7 +187,7 @@ const Appointments = () => {
                             <select
                                 className="form-select"
                                 onChange={(e) => setSelectedSpecialization(e.target.value)}
-                                value={selectSpecialization}
+                                value={selectedSpecialization}
                             >
                                 <option value="">All Specializations</option>
                                 {specializations.map((specialization, index) => (
@@ -182,8 +198,8 @@ const Appointments = () => {
                             </select>
                         </div>
                         <div className="d-flex flex-wrap justify-content-center align-items-center">
-                            {currentDoctors.map((doctor, i) => (
-                                <div key={i}>
+                            {currentDoctors.map((doctor) => (
+                                <div key={doctor.doctorId}>
                                     <DoctorsCard
                                         profileImage={doctor.profileImage}
                                         name={doctor.name}
@@ -197,22 +213,12 @@ const Appointments = () => {
                 )}
             </div>
             <div className="pagination justify-content-center mt-4">
-                {sessionStorage.getItem('role') === 'doctor' ? (
+                {sessionStorage.getItem('role') === 'doctor' && (
                     Array.from({ length: Math.ceil(filteredAppointments.length / appointmentsPerPage) }, (_, index) => (
                         <button
                             key={index}
                             onClick={() => setCurrentPage(index + 1)}
-                            className={`btn m-1 pagination-btn ${currentPage === index + 1 ? 'active' : ''}`}
-                        >
-                            {index + 1}
-                        </button>
-                    ))
-                ) : (
-                    Array.from({ length: Math.ceil(filteredDoctors.length / appointmentsPerPage) }, (_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setCurrentPage(index + 1)}
-                            className={`btn m-1 pagination-btn ${currentPage === index + 1 ? 'active' : ''}`}
+                            className={`btn ${currentPage === index + 1 ? 'btn-primary' : 'btn-secondary'}`}
                         >
                             {index + 1}
                         </button>

@@ -5,7 +5,8 @@ import Navbar from '@/components/navbar';
 import './style.scss';
 import { FooterSection } from '@/components/Footer';
 import { AppointmentCard } from '@/components/meetings';
-import axios from 'axios'; // Make sure to import axios
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 interface Appointment {
   appointmentTime: string;
@@ -17,41 +18,82 @@ interface Appointment {
   patientId: string;
   appointmentType: string;
   id: string;
-  date: Date; // Include date for sorting
+  date: Date;
 }
-const SchedulePage = () => {
-  const [appointments, setAppointments] = useState<Appointment[]>([]); // State to store appointments with the defined interface
-  const doctorId = sessionStorage.getItem('_id'); // Replace this with the actual doctor ID you want to fetch appointments for
 
+const SchedulePage = () => {
+  const [appointments, setAppointments] = useState<Appointment[]>([]); // State for storing appointments
+  const userId = sessionStorage.getItem('_id'); // Retrieve user ID from sessionStorage
+  const role = sessionStorage.getItem('role'); // Retrieve user role (either 'doctor' or 'patient')
+  const router = useRouter()
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(`/api/appointments/getAllDoctorsById?id=${doctorId}`); // Update the endpoint as necessary
-        setAppointments(response.data); // Set appointments based on fetched data
-        console.log(response.data)
+        let response;
+
+        if (role === 'doctor') {
+          // Fetch appointments by doctor ID
+          response = await axios.get(`/api/appointments/getAllDoctorsById?id=${userId}`);
+        } else if (role === 'patient') {
+          // Fetch appointments by patient ID
+          response = await axios.get(`/api/appointments/getAllPatientsById?id=${userId}`);
+        }
+        console.log(response?.data.appointments)
+        if (response && response.data) {
+          setAppointments(response.data.appointments);
+        } else {
+          console.error('No appointments found or invalid response');
+        }
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
     };
 
     fetchAppointments();
-  }, [doctorId]); // Fetch appointments whenever doctorId changes
+  }, [userId, role]);
+  const handleAddContact = async (doctorId: string, receiverProfileImage: string, receiverName: string) => {
+    const profilePicture = sessionStorage.getItem('profilePicture') || '';
+    const userId = sessionStorage.getItem('_id') || '';
+    const username = sessionStorage.getItem('username') || '';
+    try {
+        const response = await fetch('/api/contacts/addContact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId,
+                contactId: doctorId,
+                userProfileImage: profilePicture,
+                name: username,
+                receiverProfileImage,
+                receiverName,
+            }),
+        });
+        if (response.ok) {
+            router.push('/chat');
+        } else {
+            const errorData = await response.json();
+            console.error('Failed to add contact:', errorData.message);
+        }
+    } catch (error) {
+        console.error('Error adding contact:', error);
+    }
+};
 
   return (
     <div>
       <Navbar activeItem={3} />
       <div className="container">
-        <div className='mt-5 holder-calender'>
+        <div className="mt-5 holder-calender">
           {appointments.length > 0 ? (
             appointments.map((appointment) => (
               <AppointmentCard
-                key={appointment.id} // Use the unique ID from the appointment object
-                img={appointment.imageUrl} // Assuming the image URL is in img
+                img={appointment.imageUrl}
                 name={appointment.name}
-                specialization={'appointment.specialization'}
-                time={appointment.appointmentTime}
-                id={appointment.id} // Assuming id is the unique identifier
-                appointmentType={appointment.appointmentType} // Assuming appointmentType is part of the appointment object
+                time={new Date(appointment.appointmentTime).toLocaleString()}
+                appointmentType={appointment.appointmentType}
+                id={appointment.id}
+                specialization={appointment.specialization}
+                handleComment={handleAddContact}
               />
             ))
           ) : (

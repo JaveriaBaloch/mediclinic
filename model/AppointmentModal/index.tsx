@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IAppointment extends Document {
+  
   specialization: string;
   speciality: string;
   doctorId: string;

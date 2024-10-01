@@ -45,8 +45,6 @@ export const HomepageFeaturedDoctorsSection = () => {
                                 name={doctor.name}
                                 specialization={doctor.specialty}
                                 id={doctor.doctorId} // Assuming doctorId is the unique identifier
-                                time={doctor.availableTime} // Assuming availableTime is part of the doctor object
-                                appointmentType={doctor.appointmentType} // Assuming appointmentType is part of the doctor object
                             />
                         ))
                     ) : (
