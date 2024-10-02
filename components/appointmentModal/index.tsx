@@ -7,6 +7,12 @@ interface AppointmentModalProps {
   doctorName: string;
   closeModal: () => void;
 }
+interface Availability {
+  _id: string;
+  doctorId: string;
+  startDate: Date;
+  endDate: Date;
+}
 
 export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, doctorName, closeModal }) => {
   const [insuranceNumber, setInsuranceNumber] = useState<string>('');
@@ -18,6 +24,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, do
   const [date, setDate] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [vacations, setVacations] = useState<Availability[]>([]); // State for vacations
 
   // Regex patterns
   const insuranceNumberPattern = /^\d{9}$/; // 9 digits for example
@@ -102,7 +109,18 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, do
       }
     };
 
+    const fetchVacations = async () => {
+      try {
+        const response = await axios.get(`/api/availabilities/getByDoctorId?doctorId=${doctorId}`);
+        setVacations(response.data); // Assuming vacations data is in response.data.vacations
+        console.log(vacations)
+      } catch (error) {
+        console.error("Error fetching vacations:", error);
+      }
+    };
+
     fetchAvailableTimes();
+    fetchVacations();
   }, [date, doctorId, appointmentType]);
 
   const handleSubmit = async () => {
@@ -142,12 +160,11 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, do
         imageUrl: sessionStorage.getItem('profilePicture'), // Check if this returns a valid URL
         date: appointmentDate.toISOString(),
         appointmentTime: appointmentDate.toISOString(),
-    }, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    
+      }, {
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
 
       alert('Appointment successfully booked!');
       closeModal();
@@ -220,11 +237,25 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, do
           )}
         </select>
 
+       
+        <ul className='text-danger'>
+        <h4>Doctor's Vacations</h4>
+          {vacations && vacations.length > 0 ? (  // Check if vacations is defined
+            vacations.map((vacation, index) => (
+              <li key={index}>
+                {new Date(vacation.startDate).toLocaleDateString()} to {new Date(vacation.endDate).toLocaleDateString()
+                }</li>
+            ))
+          ) : (
+            <li>No vacations scheduled.</li>
+          )}
+        </ul>
+
         <div className="modal-actions">
           <button onClick={handleSubmit} disabled={loading}>
             {loading ? "Submitting..." : "Submit"}
           </button>
-          <button onClick={closeModal}>Close</button>
+          <button onClick={closeModal}>Cancel</button>
         </div>
       </div>
     </div>
