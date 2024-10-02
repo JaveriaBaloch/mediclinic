@@ -20,4 +20,22 @@
         font-style: normal;
         font-weight: 600;
     }
+   
+   
+   
+}
+.opacity-30{
+    opacity: rgba(255, 255, 255, 0.63);
+}
+.form-update-availability{
+    position: absolute; /* Positioning the child element absolutely */
+    top: 50%;           /* Position the top edge at 50% of the container */
+    left: 50%;          /* Position the left edge at 50% of the container */
+    transform: translate(-50%, -50%); /* Centering the element */
+    padding: 20px;     /* Optional padding */
+    background-color: #ffffff; /* Background color for visibility */
+    color: white;      /* Text color */
+    border-radius: 5px; /* Rounded corners */
+    .holder{
+    }
 }

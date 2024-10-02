@@ -6,6 +6,7 @@ import './style.scss';
 import { useRouter } from "next/navigation";
 
 interface Appointment {
+    
     img: string;
     name: string;
     specialization: string;
@@ -94,7 +95,7 @@ export const PatientsListView = () => {
         fetchAppointments(); // Fetch appointments on component mount
     }, []);
 
-    const handleSelect = (ranges: RangeKeyDict) => {
+    const handleSelect = (ranges: any) => {
         setRange([ranges.selection]);
     };
 
@@ -110,7 +111,21 @@ export const PatientsListView = () => {
         acc[dateKey].push(appointment);
         return acc;
     }, {});
-
+    const handleCancel = async (id: string) => {
+        try {
+            const response = await fetch(`/api/appointments/cancel?id=${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                setAppointments(prev => prev.filter((appointment:any) => appointment._id !== id));
+            } else {
+                const errorData = await response.json();
+                console.error('Failed to cancel appointment:', errorData.message);
+            }
+        } catch (error) {
+            console.error('Failed to cancel appointment:', error);
+        }
+    };
     return (
         <div className="container" id="DoctorsSchedule">
             <SectionHeadings color="#006AAC" text="Appointments" align="justify-content-center" />
@@ -138,6 +153,7 @@ export const PatientsListView = () => {
                                                     id={appointment.patientId}
                                                     appointmentType={appointment.appointmentType}
                                                     handleComment={handleComment}
+                                                    handleCancel={handleCancel}
                                                 />
                                             ))}
                                         </div>

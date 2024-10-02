@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const patientId = searchParams.get('id'); // Get the doctor ID from query parameters
 
     try {
-        if (!patientId) {
+        if (!patientId ) {
             return NextResponse.json({ message: 'Doctor ID is required' }, { status: 400 });
         }
 

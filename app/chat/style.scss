@@ -4,8 +4,9 @@
 
 #Chat {
     .clients {
-        height: 80vh;
+        height: 78vh;
         // padding: 10px; 
+        border: 1rem;
         padding: 0 !important;
 
         overflow-y: scroll;
