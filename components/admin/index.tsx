@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation"; // Use for navigation
 
 export const AdminHomePageView = () => {
   const [doctorsList, setDoctorsList] = useState<IDoctor[]>([]);
+  const [searchName, setSearchName] = useState<string>(''); // State for search by name
+  const [searchStatus, setSearchStatus] = useState<string>(''); // State for search by status
+  const [searchSpecialty, setSearchSpecialty] = useState<string>(''); // State for search by specialty
   const router = useRouter(); // Initialize router for navigation
 
   useEffect(() => {
@@ -95,12 +98,55 @@ export const AdminHomePageView = () => {
     }
   };
 
+  // Extracting unique specialties for the dropdown
+  const specialties = [...new Set(doctorsList.map(doctor => doctor.specialty))];
+
+  // Filtering doctors based on search criteria
+  const filteredDoctors = doctorsList.filter((doctor) => {
+    const matchName = doctor.name.toLowerCase().includes(searchName.toLowerCase());
+    const matchStatus = searchStatus ? doctor.status === searchStatus : true;
+    const matchSpecialty = searchSpecialty ? doctor.specialty === searchSpecialty : true;
+    return matchName && matchStatus && matchSpecialty;
+  });
+
   return (
     <div id="adminview" className="mt-5">
       <div className="container my-5">
         <h4 className="small-heading">Doctors waiting for approval</h4>
+        
+        {/* Search Input Fields */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search by name"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+            className="form-control mb-2"
+          />
+          <select
+            value={searchStatus}
+            onChange={(e) => setSearchStatus(e.target.value)}
+            className="form-select mb-2"
+          >
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select
+            value={searchSpecialty}
+            onChange={(e) => setSearchSpecialty(e.target.value)}
+            className="form-select mb-2"
+          >
+            <option value="">All Specialties</option>
+            {specialties.map((specialty, index) => (
+              <option key={index} value={specialty}>{specialty}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="d-flex flex-wrap justify-content-between align-items-center">
-          {doctorsList.map((doctor) => (
+          {filteredDoctors.map((doctor) => (
             <div key={doctor.doctorId} className="doctor-card-admin mt-3 m-2 d-flex flex-wrap justify-content-start align-items-start p-4">
               <div className="d-block p-2">
                 <img src={doctor.profileImage} alt={doctor.name} className="doctor-image" />

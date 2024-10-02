@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import ContactListModal from '@/model/contactListModal'; // Adjust the path based on your folder structure
 import { connectDB } from '@/lib/mongodb'; // Ensure this connects to your MongoDB
 
-// Handle POST requests to add a contact
+// Handle POST requests to add or update a contact
 export async function POST(req: Request) {
     const { userId, contactId, userProfileImage, name, receiverProfileImage, receiverName } = await req.json();
 
@@ -20,7 +20,15 @@ export async function POST(req: Request) {
     await connectDB();
 
     try {
-        // Add the sender's contact
+        // Remove the contact from the sender's list if it exists
+        await ContactListModal.updateOne(
+            { userId },
+            {
+                $pull: { contacts: { contactId } } // Remove contactId from contacts
+            }
+        );
+
+        // Add the contact again to the sender's contact list
         const senderContactList = await ContactListModal.findOneAndUpdate(
             { userId },
             {
@@ -35,7 +43,15 @@ export async function POST(req: Request) {
             { new: true, upsert: true } // Create a new document if it doesn't exist
         );
 
-        // Add the receiver's contact
+        // Remove the contact from the receiver's list if it exists
+        await ContactListModal.updateOne(
+            { userId: contactId },
+            {
+                $pull: { contacts: { contactId: userId } } // Remove the user's contactId from the receiver's contacts
+            }
+        );
+
+        // Add the contact again to the receiver's contact list
         const receiverContactList = await ContactListModal.findOneAndUpdate(
             { userId: contactId },
             {
@@ -51,11 +67,11 @@ export async function POST(req: Request) {
         );
 
         return NextResponse.json(
-            { message: 'Contact added successfully for both sender and receiver' },
+            { message: 'Contact updated successfully for both sender and receiver' },
             { status: 200 }
         );
     } catch (error) {
-        console.error('Error adding contact:', error);
+        console.error('Error updating contact:', error);
         return NextResponse.json(
             { message: 'Internal Server Error' },
             { status: 500 }

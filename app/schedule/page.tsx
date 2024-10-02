@@ -17,7 +17,7 @@ interface Appointment {
   imageUrl: string;
   patientId: string;
   appointmentType: string;
-  id: string;
+  _id: string;
   date: Date;
 }
 
@@ -26,6 +26,22 @@ const SchedulePage = () => {
   const userId = sessionStorage.getItem('_id'); // Retrieve user ID from sessionStorage
   const role = sessionStorage.getItem('role'); // Retrieve user role (either 'doctor' or 'patient')
   const router = useRouter()
+  const handleCancel = async (id: string) => {
+    try {
+        const response = await fetch(`/api/appointments/cancel?id=${id}`, {
+            method: 'DELETE',
+        });
+        if (response.ok) {
+            setAppointments(prev => prev.filter(appointment => appointment._id !== id));
+        } else {
+            const errorData = await response.json();
+            console.error('Failed to cancel appointment:', errorData.message);
+        }
+    } catch (error) {
+        console.error('Failed to cancel appointment:', error);
+    }
+};
+
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -91,9 +107,10 @@ const SchedulePage = () => {
                 name={appointment.name}
                 time={new Date(appointment.appointmentTime).toLocaleString()}
                 appointmentType={appointment.appointmentType}
-                id={appointment.id}
+                id={appointment._id}
                 specialization={appointment.specialization}
                 handleComment={handleAddContact}
+                handleCancel={handleCancel}
               />
             ))
           ) : (

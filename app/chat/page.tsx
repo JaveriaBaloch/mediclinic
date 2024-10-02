@@ -14,6 +14,8 @@ const MessagePage = () => {
     const [fileUrl, setFileUrl] = useState<string | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [contacts, setContacts] = useState<any[]>([]);
+    const [filteredContacts, setFilteredContacts] = useState<any[]>([]);
+    const [searchQuery, setSearchQuery] = useState(''); // Search query state
     const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
     const senderId = sessionStorage.getItem('_id');
 
@@ -24,6 +26,7 @@ const MessagePage = () => {
         try {
             const response = await axios.get(`/api/contacts/getAll?userId=${userId}`);
             setContacts(response.data.contacts);
+            setFilteredContacts(response.data.contacts); // Initialize filtered contacts
         } catch (error) {
             console.error('Error fetching contacts:', error);
         }
@@ -66,7 +69,6 @@ const MessagePage = () => {
             formData.append('receiverId', selectedContactId || '');
             formData.append('message', message);
 
-            // Append file if present
             const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
             const file = fileInput.files?.[0];
             if (file) {
@@ -81,13 +83,11 @@ const MessagePage = () => {
                 });
 
                 if (response.status === 200) {
-                    console.log('Message sent');
-                    // Reset form state
                     setMessage('');
                     setFilePreview(null);
                     setFileName(null);
                     setFileUrl(null);
-                    fetchMessages(selectedContactId || ''); // Refresh message list after sending
+                    fetchMessages(selectedContactId || '');
                 } else {
                     console.error('Error sending message');
                 }
@@ -95,6 +95,16 @@ const MessagePage = () => {
                 console.error('Error sending message:', error);
             }
         }
+    };
+
+    // Filter contacts by search query
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value.toLowerCase();
+        setSearchQuery(query);
+        const filtered = contacts.filter((contact) =>
+            contact.name.toLowerCase().includes(query)
+        );
+        setFilteredContacts(filtered);
     };
 
     useEffect(() => {
@@ -105,10 +115,10 @@ const MessagePage = () => {
         if (selectedContactId) {
             fetchMessages(selectedContactId);
             const interval = setInterval(() => {
-                fetchMessages(selectedContactId); // Poll for new messages every 2 seconds
+                fetchMessages(selectedContactId);
             }, 2000);
 
-            return () => clearInterval(interval); // Cleanup on component unmount
+            return () => clearInterval(interval);
         }
     }, [selectedContactId]);
 
@@ -116,18 +126,28 @@ const MessagePage = () => {
         <div id="Chat">
             <Navbar activeItem={4} />
             <div className="container-fluid mt-5 pt-5">
-                <div className="row mt-4 px-5">
+                <div className="row mt-4 px-0 rounded-4">
                     {/* Clients/Contacts Section */}
-                    <div className="col-xl-3 col-lg-4 col-md-9 col-sm-9 mx-auto">
-                        <div className="rounded-4 bg-white pt-3 pb-3 ps-2 pe-2">
-                            <div className="clients">
-                                {contacts.map((contact) => (
+                    <div className="col-xl-3 col-lg-4 col-md-9 col-sm-9 mx-auto rounded-4">
+                        <div className="rounded-4 bg-white p-0">
+                            {/* Search Input */}
+                            <div className="search-bar p-2">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search clients..."
+                                    value={searchQuery}
+                                    onChange={handleSearch}
+                                />
+                            </div>
+                            <div className="clients  pt-3 pb-3 ps-2 pe-2 rounded-4">
+                                {filteredContacts.map((contact) => (
                                     <div
-                                        className="client"
+                                        className={`client px-3 py-2 ${contact.contactId === selectedContactId ? 'active-contact' : ''}`} // Add conditional class
                                         key={contact.contactId}
                                         onClick={() => {
                                             setSelectedContactId(contact.contactId);
-                                            fetchMessages(contact.contactId); // Fetch messages when contact is selected
+                                            fetchMessages(contact.contactId);
                                         }}
                                     >
                                         <div className="d-flex justify-center align-align-center">

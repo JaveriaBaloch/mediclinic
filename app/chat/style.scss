@@ -5,6 +5,9 @@
 #Chat {
     .clients {
         height: 80vh;
+        // padding: 10px; 
+        padding: 0 !important;
+
         overflow-y: scroll;
 
         &::-webkit-scrollbar {
@@ -12,7 +15,6 @@
         }
 
         .client {
-            padding: 10px;
             border-bottom: 1px solid #ccc;
             cursor: pointer;
 
@@ -164,4 +166,17 @@
             }
         }
     }
+    .client {
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .client:hover {
+        background-color: #e0f7fa;
+    }
+    
+    .active-contact {
+        background-color: #e0f7fa; // Light blue background for selected contact
+    }
+    
 }

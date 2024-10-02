@@ -11,8 +11,20 @@ import { AppointmentCard } from '@/components/meetings';
 import { useRouter } from 'next/navigation';
 import './style.scss';
 
+interface Appointment {
+    appointmentTime: string;
+    img: string;
+    name: string;
+    specialization: string;
+    time: string;
+    imageUrl: string;
+    patientId: string;
+    appointmentType: string;
+    _id: string;
+    date: Date;
+  }
 const Appointments: React.FC = () => {
-    const [appointments, setAppointments] = useState<IAppointment[]>([]);
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [doctors, setDoctors] = useState<IDoctor[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -175,7 +187,7 @@ const Appointments: React.FC = () => {
                 )}
                 {(!sessionStorage.getItem('role') || sessionStorage.getItem('role') === 'patient') && (
                     <div className="mt-5 py-1">
-                        <SectionHeadings text="Doctors" align="flex-content-start" color="#062635" />
+                        <h4 className="small-heading">Doctors</h4>
                         <div className="input-group mb-3">
                             <input
                                 type="text"
