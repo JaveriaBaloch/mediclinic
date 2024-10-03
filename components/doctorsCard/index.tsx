@@ -51,6 +51,7 @@ export const DoctorsCard: React.FC<DoctorsCardProps> = ({
 
             {isModalOpen && (
                 <AppointmentModal
+                    doctorImage={profileImage}
                     doctorId={id}
                     doctorName={name}
                     closeModal={closeModal}

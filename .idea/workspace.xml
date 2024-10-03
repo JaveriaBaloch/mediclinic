@@ -5,19 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa0d3694-8538-46c0-af2a-fde593649c44" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/adminLogin/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/adminLogin/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/doctorAccountCreation/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/doctorAccountCreation/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/contacts/addContact/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/contacts/addContact/route.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/doctors/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/doctors/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/pharmacy/page.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/schedule/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/schedule/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/DoctorsHomeBanner/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/DoctorsHomeBanner/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/admin/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/admin/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/appointmentModal/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/appointmentModal/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/doctorsCard/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/doctorsCard/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/homepageSections/DoctorsSection/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/homepageSections/DoctorsSection/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/meetings/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/meetings/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/doctorModal/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/model/doctorModal/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,12 +30,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

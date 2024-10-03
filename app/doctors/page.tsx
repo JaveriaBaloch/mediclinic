@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DoctorsCard } from '@/components/doctorsCard';
-import { IAppointment } from '@/model/AppointmentModal';
 import { SectionHeadings } from '@/components/sectionHeadings';
 import Navbar from '@/components/navbar';
 import { IDoctor } from '@/model/doctorModal';
@@ -12,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import './style.scss';
 
 interface Appointment {
+    doctorId: string;
     appointmentTime: string;
     img: string;
     name: string;
@@ -22,7 +22,8 @@ interface Appointment {
     appointmentType: string;
     _id: string;
     date: Date;
-  }
+}
+
 const Appointments: React.FC = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [doctors, setDoctors] = useState<IDoctor[]>([]);
@@ -33,6 +34,7 @@ const Appointments: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const appointmentsPerPage = 10;
     const router = useRouter();
+    const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
 
     const handleCancel = async (id: string) => {
         try {
@@ -49,7 +51,6 @@ const Appointments: React.FC = () => {
             console.error('Failed to cancel appointment:', error);
         }
     };
-    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -83,12 +84,16 @@ const Appointments: React.FC = () => {
             console.error('Error fetching featured doctors:', error);
         }
     };
-    
 
-    const handleAddContact = async (doctorId: string, receiverProfileImage: string, receiverName: string) => {
+    const getUserInfo = () => {
         const profilePicture = sessionStorage.getItem('profilePicture') || '';
         const userId = sessionStorage.getItem('_id') || '';
         const username = sessionStorage.getItem('username') || '';
+        return { profilePicture, userId, username };
+    };
+
+    const handleAddContact = async (doctorId: string, receiverProfileImage: string, receiverName: string) => {
+        const { profilePicture, userId, username } = getUserInfo();
         try {
             const response = await fetch('/api/contacts/addContact', {
                 method: 'POST',
@@ -103,13 +108,17 @@ const Appointments: React.FC = () => {
                 }),
             });
             if (response.ok) {
+                setFeedbackMessage(`Contact added successfully: ${receiverName}`);
+                setTimeout(() => setFeedbackMessage(null), 3000); // Clear message after 3 seconds
                 router.push('/chat');
             } else {
                 const errorData = await response.json();
                 console.error('Failed to add contact:', errorData.message);
+                setFeedbackMessage(`Failed to add contact: ${errorData.message}`);
             }
         } catch (error) {
             console.error('Error adding contact:', error);
+            setFeedbackMessage('An error occurred while adding the contact.');
         }
     };
 
@@ -136,6 +145,7 @@ const Appointments: React.FC = () => {
     return (
         <div className="container mt-5 pt-5">
             <Navbar activeItem={1} />
+            {feedbackMessage && <div className="alert alert-info">{feedbackMessage}</div>}
             {sessionStorage.getItem('role') === 'doctor' && (
                 <div className="mt-5 pt-5">
                     <SectionHeadings text="Appointments" color="#062635" align="flex-content-start" />
@@ -163,7 +173,7 @@ const Appointments: React.FC = () => {
             <div className="row">
                 {sessionStorage.getItem('role') === 'doctor' ? (
                     currentAppointments.length > 0 ? (
-                        currentAppointments.map((appointment,i) => (
+                        currentAppointments.map((appointment, i) => (
                             <div className="col-md-4 mb-4" key={i}>
                                 <AppointmentCard
                                     img={appointment.imageUrl || ''}
@@ -172,7 +182,7 @@ const Appointments: React.FC = () => {
                                     id={appointment._id}
                                     time={new Date(appointment.appointmentTime).toLocaleString()}
                                     appointmentType={appointment.appointmentType}
-                                    handleComment={handleAddContact}
+                                    handleComment={() => handleAddContact(appointment.doctorId, appointment.imageUrl, appointment.name)}
                                     handleCancel={handleCancel} // Pass handleCancel directly
                                 />
                             </div>
@@ -210,31 +220,18 @@ const Appointments: React.FC = () => {
                             </select>
                         </div>
                         <div className="d-flex flex-wrap justify-content-center align-items-center">
-                            {currentDoctors.map((doctor) => (
-                                <div key={doctor.doctorId}>
-                                    <DoctorsCard
-                                        profileImage={doctor.profileImage}
-                                        name={doctor.name}
-                                        specialization={doctor.specialty}
-                                        id={doctor.doctorId}
+                            {currentDoctors.map((doctor,i) => (
+                                <div className="col-md-4 mb-4" key={i}>
+                                    <DoctorsCard 
+                                    profileImage={doctor.profileImage} 
+                                    name={doctor.name} 
+                                    specialization={doctor.specialty} 
+                                    id={doctor._id}                                    
                                     />
                                 </div>
                             ))}
                         </div>
                     </div>
-                )}
-            </div>
-            <div className="pagination justify-content-center mt-4">
-                {sessionStorage.getItem('role') === 'doctor' && (
-                    Array.from({ length: Math.ceil(filteredAppointments.length / appointmentsPerPage) }, (_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setCurrentPage(index + 1)}
-                            className={`btn ${currentPage === index + 1 ? 'btn-primary' : 'btn-secondary'}`}
-                        >
-                            {index + 1}
-                        </button>
-                    ))
                 )}
             </div>
         </div>

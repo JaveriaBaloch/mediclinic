@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 
 interface Appointment {
   appointmentTime: string;
+  doctorId:string;
   img: string;
   name: string;
   specialization: string;
@@ -109,7 +110,7 @@ const SchedulePage = () => {
                 appointmentType={appointment.appointmentType}
                 id={appointment._id}
                 specialization={appointment.specialization}
-                handleComment={handleAddContact}
+                handleComment={()=>handleAddContact(appointment.doctorId,appointment.imageUrl,appointment.name)}
                 handleCancel={handleCancel}
               />
             ))

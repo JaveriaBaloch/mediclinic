@@ -37,7 +37,7 @@ export const AdminHomePageView = () => {
         method: 'POST',
       });
       if (response.ok) {
-        setDoctorsList((prev) => prev.map((doctor) => 
+        setDoctorsList((prev:any) => prev.map((doctor: { doctorId: string; }) => 
           doctor.doctorId === doctorId ? { ...doctor, status: 'accepted' } : doctor
         ));
       } else {
@@ -54,7 +54,7 @@ export const AdminHomePageView = () => {
         method: 'POST',
       });
       if (response.ok) {
-        setDoctorsList((prev) => prev.map((doctor) => 
+        setDoctorsList((prev:any) => prev.map((doctor: { doctorId: string; }) => 
           doctor.doctorId === doctorId ? { ...doctor, status: 'rejected' } : doctor
         ));
       } else {

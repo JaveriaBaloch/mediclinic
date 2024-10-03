@@ -5,6 +5,7 @@ import './style.scss';
 interface AppointmentModalProps {
   doctorId: string | number;
   doctorName: string;
+  doctorImage:string;
   closeModal: () => void;
 }
 interface Availability {
@@ -14,7 +15,7 @@ interface Availability {
   endDate: Date;
 }
 
-export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, doctorName, closeModal }) => {
+export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, doctorName, doctorImage, closeModal }) => {
   const [insuranceNumber, setInsuranceNumber] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -157,7 +158,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, do
         name,
         phone,
         appointmentType,
-        imageUrl: sessionStorage.getItem('profilePicture'), // Check if this returns a valid URL
+        imageUrl: doctorImage, // Check if this returns a valid URL
         date: appointmentDate.toISOString(),
         appointmentTime: appointmentDate.toISOString(),
       }, {
