@@ -10,8 +10,7 @@ import { SectionHeadings } from '@/components/sectionHeadings';
 import { InputField } from '@/components/input';
 import { useRouter } from 'next/navigation';
 
-const Auth = () => {
-    const router = useRouter();
+const DoctorAuth = () => {
     const [currentContent, setCurrentContent] = useState(1);
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -21,6 +20,7 @@ const Auth = () => {
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [isSignUp, setIsSignUp] = useState(true);
     const [message, setMessage] = useState("");
+    const router = useRouter();
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -42,9 +42,8 @@ const Auth = () => {
     };
 
     const handleUsernameChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    console.log("Username typed:", event.target.value);  // check this
-    setUsername(event.target.value);
-};
+        setUsername(event.target.value);
+    };
 
     const handleProfileImageChange: ChangeEventHandler<HTMLInputElement> = (event) => {
         const files = event.target.files;
@@ -60,13 +59,16 @@ const Auth = () => {
         setError(false);
         setMessage("");
 
-const usernamePattern = /^[a-zA-Z0-9 _-]{3,16}$/;
+        const normalizedPassword = password.trim();
+        const normalizedConfirmPassword = confirmPassword.trim();
+
+        const usernamePattern = /^[a-zA-Z0-9 _-]{3,16}$/;
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
         if (!usernamePattern.test(username)) {
             setError(true);
-            setMessage('Invalid username. It must be 3-16 characters long and can contain only letters, underscores, or hyphens.');
+            setMessage('Invalid username. It must be 3-16 characters long.');
             return;
         }
         if (!emailPattern.test(email)) {
@@ -74,12 +76,12 @@ const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
             setMessage('Invalid email format.');
             return;
         }
-        if (!passwordPattern.test(password)) {
+        if (!passwordPattern.test(normalizedPassword)) {
             setError(true);
             setMessage('Password must be at least 8 characters long and include at least one letter and one number.');
             return;
         }
-        if (password !== confirmPassword) {
+        if (normalizedPassword !== normalizedConfirmPassword) {
             setError(true);
             setMessage('Passwords do not match.');
             return;
@@ -88,8 +90,8 @@ const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
         const formData = new FormData();
         formData.append('username', username);
         formData.append('email', email);
-        formData.append('password', password);
-        formData.append('role', 'patient');
+        formData.append('password', normalizedPassword);
+        formData.append('role', 'doctor');
         if (profileImage) {
             formData.append('profileImage', profileImage);
         }
@@ -208,7 +210,7 @@ const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
                         <div className={`form-container ${isSignUp ? 'show-signup' : 'show-signin'}`}>
                             {isSignUp ? (
                                 <form id="signup" onSubmit={handleSignUp} encType="multipart/form-data">
-                                    <SectionHeadings text={'Sign Up'} color="#006AAC" align="justify-content-center" />
+                                    <SectionHeadings text={'Doctor Account Creation'} color="#006AAC" align="justify-content-center" />
                                     <div className="container my-3">
                                         <InputField placeholder="Username" onTextChange={handleUsernameChange} type="text" name="username" />
                                         <InputField placeholder="Email" onTextChange={handleEmailChange} type="email" name="email" />
@@ -244,4 +246,4 @@ const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
     );
 };
 
-export default Auth;
+export default DoctorAuth;

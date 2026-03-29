@@ -3,6 +3,7 @@
 import React, { ChangeEventHandler, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import './style.scss';
 
 const DoctorProfile: React.FC = () => {
     const router = useRouter();
@@ -15,7 +16,7 @@ const DoctorProfile: React.FC = () => {
     const [uploadedDocs, setUploadedDocs] = useState<File[]>([]);
     const [message, setMessage] = useState('');
     const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false); // New loading state
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const id = sessionStorage.getItem('_id');
@@ -26,20 +27,19 @@ const DoctorProfile: React.FC = () => {
     }, []);
 
     const fetchDoctorProfile = async (id: string) => {
-        setLoading(true); // Start loading
+        setLoading(true);
         try {
             const response = await fetch(`/api/doctors/getProfile?doctorId=${id}`);
             const data = await response.json();
-
             if (response.ok) {
                 setName(data.name);
                 setSpecialty(data.specialty);
                 setPhone(data.phone);
                 setEmail(data.email);
                 if (data.profileImage) {
-                    setProfileImage(new File([], data.profileImage)); // Adjust this if needed
+                    setProfileImage(new File([], data.profileImage));
                 }
-                const docFiles = data.documents.map((doc: string) => new File([], doc)); // Adjust if necessary
+                const docFiles = data.documents.map((doc: string) => new File([], doc));
                 setUploadedDocs(docFiles);
             } else {
                 setError(true);
@@ -50,22 +50,24 @@ const DoctorProfile: React.FC = () => {
             setError(true);
             setMessage('Error fetching doctor profile.');
         } finally {
-            setLoading(false); // End loading
+            setLoading(false);
         }
     };
-      const handleProfileImageChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-           const files = event.target.files;
-           if (files && files.length > 0) {
-               setProfileImage(files[0]);
-           } else {
-               setProfileImage(null); // Reset if no file selected
-           }
-       };
+
+    const handleProfileImageChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            setProfileImage(files[0]);
+        } else {
+            setProfileImage(null);
+        }
+    };
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             setUploadedDocs((prevDocs) => [...prevDocs, file]);
-            event.target.value = ''; // Clear input for same file uploads
+            event.target.value = '';
         }
     };
 
@@ -81,15 +83,13 @@ const DoctorProfile: React.FC = () => {
         formData.append('specialty', specialty);
         formData.append('phone', phone);
         formData.append('email', email);
-        
         if (profileImage) {
             formData.append('profileImage', profileImage);
         }
-
         uploadedDocs.forEach((doc) => {
             formData.append('files', doc);
         });
-        setLoading(true); // Start loading
+        setLoading(true);
         try {
             const response = await fetch('/api/doctors/createOrUpdate', {
                 method: 'POST',
@@ -98,6 +98,7 @@ const DoctorProfile: React.FC = () => {
             const data = await response.json();
             setMessage(data.message);
             if (response.ok) {
+                setError(false);
                 setUploadedDocs([]);
                 setProfileImage(null);
             } else {
@@ -109,90 +110,91 @@ const DoctorProfile: React.FC = () => {
             setError(true);
             setMessage('Error saving doctor profile.');
         } finally {
-            setLoading(false); // End loading
+            setLoading(false);
         }
     };
 
     return (
-        <div className="container mt-5">
-            <h2>Doctor Profile</h2>
-            {loading && <p>Loading...</p>} {/* Loading state */}
-            {message && <div className={`alert ${error ? 'alert-danger' : 'alert-info'}`}>{message}</div>}
-            <form onSubmit={handleSubmit}>
-                <input
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                />
-                <input
-                    placeholder="Specialty"
-                    value={specialty}
-                    onChange={(e) => setSpecialty(e.target.value)}
-                    required
-                />
-                <input
-                    placeholder="Phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                />
-                <input
-                    placeholder="Email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-                {profileImage && (
-                    <div>
-                        <h5>Current Profile Picture:</h5>
-<Image
-    src={URL.createObjectURL(profileImage)}
-    alt="Profile"
-    width={100}
-    height={100}
-    style={{ objectFit: 'cover' }}
-/>                    </div>
+        <div className="profile-page">
+            <div className="profile-container">
+                <div className="profile-header">
+                    <div className="profile-avatar">
+                        {profileImage ? (
+                            <img src={URL.createObjectURL(profileImage)} alt="Profile" />
+                        ) : (
+                            <div className="avatar-placeholder">
+                                <span>{name ? name.charAt(0).toUpperCase() : 'D'}</span>
+                            </div>
+                        )}
+                        <label className="avatar-upload">
+                            <input type="file" onChange={handleProfileImageChange} accept="image/*" hidden />
+                            <span>Change Photo</span>
+                        </label>
+                    </div>
+                    <div className="profile-title">
+                        <h2>{name || 'Doctor Profile'}</h2>
+                        <p className="subtitle">{specialty || 'Complete your profile below'}</p>
+                    </div>
+                </div>
+
+                {message && (
+                    <div className={`profile-alert ${error ? 'alert-error' : 'alert-success'}`}>
+                        {message}
+                    </div>
                 )}
-                <div className="mb-3">
-                <input
-    type="file"
-    onChange={handleProfileImageChange}
-    accept="image/*"
-/>
 
-                </div>
+                <form onSubmit={handleSubmit} className="profile-form">
+                    <div className="form-section">
+                        <h3 className="section-title">Personal Information</h3>
+                        <div className="form-grid">
+                            <div className="form-group">
+                                <label>Full Name</label>
+                                <input type="text" placeholder="Dr. John Smith" value={name} onChange={(e) => setName(e.target.value)} required />
+                            </div>
+                            <div className="form-group">
+                                <label>Specialty</label>
+                                <input type="text" placeholder="Cardiology" value={specialty} onChange={(e) => setSpecialty(e.target.value)} required />
+                            </div>
+                            <div className="form-group">
+                                <label>Phone</label>
+                                <input type="text" placeholder="+1 234 567 890" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                            </div>
+                            <div className="form-group">
+                                <label>Email</label>
+                                <input type="email" placeholder="doctor@clinic.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            </div>
+                        </div>
+                    </div>
 
-                
-                <div className="mb-3">
-                    <label htmlFor="documents" className="form-label">Upload Document</label>
-                    <input
-                        type="file"
-                        className="form-control"
-                        id="documents"
-                        accept="application/pdf,image/*"
-                        onChange={handleFileChange}
-                    />
-                </div>
+                    <div className="form-section">
+                        <h3 className="section-title">Documents</h3>
+                        <div className="upload-area">
+                            <label className="upload-trigger">
+                                <input type="file" accept="application/pdf,image/*" onChange={handleFileChange} hidden />
+                                <div className="upload-content">
+                                    <span className="upload-icon">+</span>
+                                    <span>Upload Document</span>
+                                    <small>PDF or Image files</small>
+                                </div>
+                            </label>
+                        </div>
+                        {uploadedDocs.length > 0 && (
+                            <div className="doc-list">
+                                {uploadedDocs.map((doc, index) => (
+                                    <div key={index} className="doc-item">
+                                        <span className="doc-name">{doc.name}</span>
+                                        <button type="button" onClick={() => handleRemoveDocument(index)} className="doc-remove">Remove</button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
 
-                <h5>Uploaded Documents:</h5>
-                <ul className="list-group mb-3">
-                    {uploadedDocs.map((doc, index) => (
-                        <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                            {doc.name}
-                            <button
-                                className="btn btn-danger btn-sm"
-                                onClick={() => handleRemoveDocument(index)}
-                            >
-                                Remove
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-
-                <button type="submit" className="btn btn-success">Submit</button>
-            </form>
+                    <button type="submit" className="submit-btn" disabled={loading}>
+                        {loading ? 'Saving...' : 'Save Profile'}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

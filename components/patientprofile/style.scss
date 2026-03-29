@@ -1,0 +1,400 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+.profile-page {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0f4f8;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.profile-container {
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+// Header
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding: 32px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+
+.profile-avatar {
+    position: relative;
+    flex-shrink: 0;
+
+    img {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #e8edf2;
+    }
+
+    .avatar-placeholder {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #006AAC, #03F0D0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+    }
+
+    .avatar-upload {
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        cursor: pointer;
+
+        span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            background: #006AAC;
+            padding: 4px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            transition: background 0.2s;
+
+            &:hover {
+                background: #005490;
+            }
+        }
+    }
+}
+
+.profile-title {
+    h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #062635;
+        margin: 0 0 4px 0;
+    }
+
+    .subtitle {
+        font-size: 0.95rem;
+        color: #707070;
+        margin: 0;
+    }
+}
+
+// Alerts
+.profile-alert {
+    padding: 14px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+
+    &.alert-success {
+        background: #e6f9f1;
+        color: #0a7a4b;
+        border-left: 4px solid #0BD984;
+    }
+
+    &.alert-error {
+        background: #fef2f2;
+        color: #b91c1c;
+        border-left: 4px solid #e74c3c;
+    }
+}
+
+// Form
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-section {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .section-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #062635;
+        margin: 0 0 20px 0;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f0f4f8;
+    }
+
+    .section-header .section-title {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+}
+
+.form-group {
+    label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 11px 16px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-family: 'DM Sans', sans-serif;
+        color: #062635;
+        background: #f9fafb;
+        transition: all 0.2s;
+        outline: none;
+
+        &:focus {
+            border-color: #006AAC;
+            box-shadow: 0 0 0 3px rgba(0, 106, 172, 0.1);
+            background: white;
+        }
+
+        &::placeholder {
+            color: #aab2bd;
+        }
+    }
+
+    select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+    }
+}
+
+// Upload area
+.upload-area {
+    margin-bottom: 16px;
+
+    .upload-trigger {
+        display: block;
+        cursor: pointer;
+        border: 2px dashed #d0d7e0;
+        border-radius: 14px;
+        padding: 28px;
+        text-align: center;
+        transition: all 0.2s;
+
+        &:hover {
+            border-color: #006AAC;
+            background: #f0f7ff;
+        }
+
+        .upload-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .upload-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e8f4fd;
+            color: #006AAC;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+
+        span {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        small {
+            color: #888;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+// Document list
+.doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.doc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f9fafb;
+    border-radius: 10px;
+    border: 1px solid #e8edf2;
+
+    .doc-name {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .doc-remove {
+        background: none;
+        border: none;
+        color: #e74c3c;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 4px 10px;
+        border-radius: 6px;
+        transition: background 0.2s;
+
+        &:hover {
+            background: #fef2f2;
+        }
+    }
+}
+
+// Medical history
+.history-card {
+    background: #f9fafb;
+    border: 1px solid #e8edf2;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 12px;
+    position: relative;
+
+    .remove-history {
+        background: none;
+        border: none;
+        color: #e74c3c;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 8px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        transition: background 0.2s;
+
+        &:hover {
+            background: #fef2f2;
+        }
+    }
+}
+
+.add-btn {
+    background: #e8f4fd;
+    color: #006AAC;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+
+    &:hover {
+        background: #d0eafb;
+    }
+}
+
+// Submit
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #006AAC, #0088d4);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(0, 106, 172, 0.25);
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(0, 106, 172, 0.35);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+// Animations
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+// Responsive
+@media (max-width: 640px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-section {
+        padding: 20px;
+    }
+
+    .profile-title h2 {
+        font-size: 1.3rem;
+    }
+}

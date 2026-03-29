@@ -2,37 +2,49 @@
 @import '@/scss/mixins';
 @import '@/scss/variables';
 
-#ContactUsSection{
-     position: relative;
+#ContactUsSection {
+    position: relative;
     display: flex;
     flex-direction: column;
-    justify-content:center ;
+    justify-content: center;
     align-items: center;
-    
-    .bg1{
-        @include attachBg();
+    overflow: hidden;
+    padding: 12rem 0;
+
+    .bg1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
         z-index: 0;
+        object-fit: cover;
     }
-    .container{
-        padding: 3rem 0;
+
+    .container {
+        margin-top: -2rem;
+        padding: 0rem 0;
         position: relative;
         z-index: 1;
-        form{
+
+        form {
             width: 70%;
             display: flex;
             flex-direction: column;
-            justify-content:center ;
+            justify-content: center;
             align-items: center;
             margin: 3rem auto;
-            input.form-control,textarea.form-control{
+
+            input.form-control,
+            textarea.form-control {
                 padding: 0.7rem 2rem;
                 font-size: 1.2rem;
                 margin: 0.3rem 0;
             }
-            .para{
+
+            .para {
                 font-size: 1.3rem;
             }
         }
-        
     }
 }
