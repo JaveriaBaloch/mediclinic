@@ -4,12 +4,12 @@ import Doctor from '@/model/doctorModal';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 // AWS S3 configuration
-const Bucket = process.env.NEXT_PUBLIC_S3_BUCKET;
+const Bucket = process.env.NEXT_PUBLIC_S3_BUCKET1;
 const s3 = new S3Client({
-    region: process.env.NEXT_PUBLIC_AWS_REGION,
+    region: process.env.NEXT_PUBLIC_AWS_REGION1,
     credentials: {
-        accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY as string,
+        accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID1 as string,
+        secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY1 as string,
     },
 });
 
@@ -28,7 +28,7 @@ const uploadFileToS3 = async (file: File): Promise<string> => {
     }));
 
     // Return the URL of the uploaded file
-    return `https://${Bucket}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${s3Key}`;
+    return `https://${Bucket}.s3.${process.env.NEXT_PUBLIC_AWS_REGION1}.amazonaws.com/${s3Key}`;
 };
 
 export async function POST(req: NextRequest) {

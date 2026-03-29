@@ -4,10 +4,10 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 const s3 = new S3Client({
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID1,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY1,
     },
-    region: process.env.AWS_REGION,
+    region: process.env.AWS_REGION1,
 });
 
 export async function POST(request) {
@@ -28,7 +28,7 @@ export async function POST(request) {
 
         // Upload to S3
         await s3.send(new PutObjectCommand({
-            Bucket: process.env.S3_BUCKET,
+            Bucket: process.env.S3_BUCKET1,
             Key: filename,
             Body: buffer,
             ContentType: file.type,
@@ -36,7 +36,7 @@ export async function POST(request) {
         }));
 
         // Build the URL
-        const imageUrl = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${filename}`;
+        const imageUrl = `https://${process.env.S3_BUCKET1}.s3.${process.env.AWS_REGION1}.amazonaws.com/${filename}`;
 
         return NextResponse.json({ imageUrl });
     } catch (error) {

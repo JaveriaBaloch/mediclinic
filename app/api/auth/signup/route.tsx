@@ -5,22 +5,22 @@ import UserModel from '@/model/userModel';
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 // Server-side environment variables (avoid NEXT_PUBLIC for secrets)
-const Bucket = process.env.S3_BUCKET || process.env.NEXT_PUBLIC_S3_BUCKET;
-const AWS_REGION = process.env.AWS_REGION || process.env.NEXT_PUBLIC_AWS_REGION;
-const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID;
-const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY || process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY;
+const Bucket = process.env.S3_BUCKET1 || process.env.NEXT_PUBLIC_S3_BUCKET1;
+const AWS_REGION1 = process.env.AWS_REGION1 || process.env.NEXT_PUBLIC_AWS_REGION1;
+const AWS_ACCESS_KEY_ID1 = process.env.AWS_ACCESS_KEY_ID1 || process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID1;
+const AWS_SECRET_ACCESS_KEY1 = process.env.AWS_SECRET_ACCESS_KEY1 || process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY1;
 
 const s3 = new S3Client({
-    region: AWS_REGION,
+    region: AWS_REGION1,
     credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID as string,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY as string,
+        accessKeyId: AWS_ACCESS_KEY_ID1 as string,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY1 as string,
     },
 });
 
 export async function POST(req: NextRequest) {
     try {
-        if (!Bucket || !AWS_REGION || !AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+        if (!Bucket || !AWS_REGION1 || !AWS_ACCESS_KEY_ID1 || !AWS_SECRET_ACCESS_KEY1) {
             return NextResponse.json(
                 { message: 'Missing S3 configuration on server' },
                 { status: 500 }
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
         }));
 
         // Generate the image URL after uploading
-        const imageUrl = `https://${Bucket}.s3.${AWS_REGION}.amazonaws.com/${s3Key}`;
+        const imageUrl = `https://${Bucket}.s3.${AWS_REGION1}.amazonaws.com/${s3Key}`;
 
         // Create new user
         const newUser = await UserModel.create({

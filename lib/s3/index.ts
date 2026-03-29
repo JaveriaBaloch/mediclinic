@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Configure the S3 client
 const s3Client = new S3Client({
-  region: process.env.NEXT_PUBLIC_AWS_REGION || 'us-east-1',
+  region: process.env.NEXT_PUBLIC_AWS_REGION1 || 'us-east-1',
   credentials: {
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID1!,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY1!,
   },
 });
 
