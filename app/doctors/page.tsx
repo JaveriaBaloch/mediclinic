@@ -122,7 +122,7 @@ const Appointments: React.FC = () => {
         }
     };
 
-    const filteredAppointments = appointments.filter(appointment => {
+    const filteredAppointments = appointments?.filter(appointment => {
         const matchName = appointment.name?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchCategory = selectedCategory ? appointment.appointmentType === selectedCategory : true;
         return matchName && matchCategory;
@@ -136,12 +136,11 @@ const Appointments: React.FC = () => {
 
     const indexOfLastAppointment = currentPage * appointmentsPerPage;
     const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
-    const currentAppointments = filteredAppointments.slice(indexOfFirstAppointment, indexOfLastAppointment);
+    const currentAppointments = filteredAppointments?.slice(indexOfFirstAppointment, indexOfLastAppointment);
 
     const indexOfLastDoctor = currentPage * appointmentsPerPage;
     const indexOfFirstDoctor = indexOfLastDoctor - appointmentsPerPage;
-    const currentDoctors = filteredDoctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
-
+    const currentDoctors = filteredDoctors?.slice(indexOfFirstDoctor, indexOfLastDoctor);
     return (
         <div className="container mt-5 pt-5">
             <Navbar activeItem={1} />
@@ -172,7 +171,7 @@ const Appointments: React.FC = () => {
             )}
             <div className="row">
                 {sessionStorage.getItem('role') === 'doctor' ? (
-                    currentAppointments.length > 0 ? (
+                    currentAppointments?.length > 0 ? (
                         currentAppointments.map((appointment, i) => (
                             <div className="col-md-4 mb-4" key={i}>
                                 <AppointmentCard

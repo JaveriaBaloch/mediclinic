@@ -101,7 +101,7 @@ const SchedulePage = () => {
       <Navbar activeItem={3} />
       <div className="container">
         <div className="mt-5 holder-calender">
-          {appointments.length > 0 ? (
+          {appointments?.length > 0 ? (
             appointments.map((appointment) => (
               <AppointmentCard
                 img={appointment.imageUrl}

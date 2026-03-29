@@ -4,18 +4,29 @@ import { connectDB } from '@/lib/mongodb';
 import UserModel from '@/model/userModel';
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-// Environment variables with NEXT_PUBLIC_ prefix
-const Bucket = process.env.NEXT_PUBLIC_S3_BUCKET;
+// Server-side environment variables (avoid NEXT_PUBLIC for secrets)
+const Bucket = process.env.S3_BUCKET || process.env.NEXT_PUBLIC_S3_BUCKET;
+const AWS_REGION = process.env.AWS_REGION || process.env.NEXT_PUBLIC_AWS_REGION;
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID;
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY || process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY;
+
 const s3 = new S3Client({
-    region: process.env.NEXT_PUBLIC_AWS_REGION,
+    region: AWS_REGION,
     credentials: {
-        accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY as string,
+        accessKeyId: AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY as string,
     },
 });
 
 export async function POST(req: NextRequest) {
     try {
+        if (!Bucket || !AWS_REGION || !AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+            return NextResponse.json(
+                { message: 'Missing S3 configuration on server' },
+                { status: 500 }
+            );
+        }
+
         const data = await req.formData(); // Use formData for file uploads
         const { username, email, password, role } = Object.fromEntries(data);
         const profileImage = data.get('profileImage') as File;
@@ -51,7 +62,7 @@ export async function POST(req: NextRequest) {
         }));
 
         // Generate the image URL after uploading
-        const imageUrl = `https://${Bucket}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${s3Key}`;
+        const imageUrl = `https://${Bucket}.s3.${AWS_REGION}.amazonaws.com/${s3Key}`;
 
         // Create new user
         const newUser = await UserModel.create({

@@ -58,10 +58,16 @@ const DoctorAuth = () => {
     const handleSignUp = async (event: React.FormEvent) => {
         event.preventDefault();
 
+        setError(false);
+        setMessage("");
+
+        const normalizedPassword = password.trim();
+        const normalizedConfirmPassword = confirmPassword.trim();
+
         // Define regex patterns
         const usernamePattern = /^[a-zA-Z_-]{3,16}$/; // Letters, underscores, hyphens, 3-16 chars, no numbers
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
-        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // At least 8 characters, one letter, one number
+        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/; // At least 8 characters, one letter, one number (specials allowed)
 
         // Validate fields
         if (!usernamePattern.test(username)) {
@@ -72,15 +78,17 @@ const DoctorAuth = () => {
         if (!emailPattern.test(email)) {
             setError(true)
             setMessage('Invalid email format.');
+            console.log('Invalid email:', email); // Debugging log
             return; // Stop execution if validation fails
         }
-        if (!passwordPattern.test(password)) {
+        if (!passwordPattern.test(normalizedPassword)) {
 
             setError(true)
             setMessage('Password must be at least 8 characters long and include at least one letter and one number.');
+            console.log('Invalid password:', normalizedPassword); // Debugging log
             return; // Stop execution if validation fails
         }
-        if (password !== confirmPassword) {
+        if (normalizedPassword !== normalizedConfirmPassword) {
             setError(true)
             setMessage('Passwords do not match.');
             return; // Stop execution if passwords don't match
@@ -89,7 +97,7 @@ const DoctorAuth = () => {
         const formData = new FormData();
         formData.append('username', username);
         formData.append('email', email);
-        formData.append('password', password);
+        formData.append('password', normalizedPassword);
         formData.append('role', 'doctor'); // Default role if not provided
         if (profileImage) {
             formData.append('profileImage', profileImage);
@@ -154,6 +162,7 @@ const DoctorAuth = () => {
                 // Handle successful sign in
                 console.log('User signed in successfully:', data);
                 setMessage(data.message)
+                setError(false)
                 // Optionally, clear fields or redirect
                 setEmail("");
                 setPassword("");
@@ -255,15 +264,16 @@ const DoctorAuth = () => {
                                         type="file"
                                         name="profileImage"
                                     />
-                                    {error && <p className="error-message">{error}</p>} {/* Display error message */}
+                                    {error && <p className="error-message">{message}</p>} {/* Display error message */}
                                     <button id="signupbtn">
                                         Sign up
                                     </button>
                                 </div>
                                 <p  id="showsignin" 
                                     onClick={() => {
-                                        document.querySelector('#signup')?.classList.add('hideup')
-                                        document.querySelector('#signin')?.classList.add('showup')
+                                        setIsSignUp(false)
+                                        setError(false)
+                                        setMessage("")
                                     }}>
                                     Already have an account? Sign In
                                 </p>
@@ -283,16 +293,15 @@ const DoctorAuth = () => {
                                         type="password"
                                         name='password'
                                     />
-                                    {error && <p className="error-message">{error}</p>} {/* Display error message */}
+                                    {error && <p className="error-message">{message}</p>} {/* Display error message */}
                                     <button id="signinbtn">
                                         Sign In
                                     </button>
                                 </div>
                                 <p id="showsignup" onClick={() => {
-                                document.querySelector('#signup')?.classList.remove('hideup')
-                                document.querySelector('#signin')?.classList.remove('showup')
-                                document.querySelector('#signin')?.classList.remove('hideup')
-                                document.querySelector('#signin')?.classList.remove('showup')
+                                setIsSignUp(true)
+                                setError(false)
+                                setMessage("")
                             }}>
                                     Don't have an account? Sign Up
                                 </p>
