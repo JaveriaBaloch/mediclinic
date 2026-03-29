@@ -44,6 +44,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ bookedSlots }, { status: 200 });
     } catch (error) {
         console.error('Error fetching booked slots:', error);
-        return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json({ message: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
     }
 }

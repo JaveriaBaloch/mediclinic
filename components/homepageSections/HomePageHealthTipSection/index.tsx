@@ -1,18 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import './style.scss';
-
-export const HomePageHealthTipSection = () => {
-    const [activeTip, setActiveTip] = useState(0);
-    
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setActiveTip((prev) => (prev === tips.length - 1 ? 0 : prev + 1)); // Cycle through contents
-        }, 4000); // Change content every 4 seconds
-        return () => clearTimeout(timer); // Cleanup timer on component unmount
-    }, [activeTip]);
-
-    const tips = [
+  const tips = [
         {
             heading: "How to remain Healthy?",
             text: "Prioritize a balanced diet, including plenty of fruits, vegetables, whole grains, lean proteins, and low-fat dairy products...",
@@ -29,6 +18,18 @@ export const HomePageHealthTipSection = () => {
             image: "/home/healthtip3.png"
         }
     ];
+export const HomePageHealthTipSection = () => {
+     const [activeTip, setActiveTip] = useState(0);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setActiveTip((prev) => (prev === tips.length - 1 ? 0 : prev + 1));
+        }, 4000);
+        return () => clearTimeout(timer);
+    }, [activeTip]);  // ✅ warning gone because tips is now a constant outside
+
+  
+    
 
     return (
         <div id="HealthTips">

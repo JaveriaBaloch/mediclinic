@@ -3,6 +3,7 @@ import './style.scss';
 import Link from "next/link";
 import { AppointmentModal } from "../appointmentModal"; // Ensure you import the modal component
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface DoctorsCardProps {
     profileImage: string;
@@ -33,7 +34,7 @@ export const DoctorsCard: React.FC<DoctorsCardProps> = ({
     console.log(encodedUrl)
     return (
         <div className="doctor-card">
-            <img src={encodedUrl} alt={name} className="img" />
+<Image src={encodedUrl} alt={name} className="img" width={200} height={200} />
             <h4>{name}</h4>
             <small>{specialization}</small>
             <button

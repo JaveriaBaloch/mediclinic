@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useState } from "react";
 import { DateRange, RangeKeyDict } from 'react-date-range';
-import { AppointmentCard } from "../meetings"; // Ensure this component is correctly defined
-import { SectionHeadings } from "../sectionHeadings"; // Ensure this component exists
+import { AppointmentCard } from "../meetings";
+import { SectionHeadings } from "../sectionHeadings";
 import './style.scss';
 import { useRouter } from "next/navigation";
-import Modal from 'react-modal'; // Import Modal from a library
+import Modal from 'react-modal';
 
 interface Availability {
     _id: string;
@@ -16,9 +16,9 @@ interface Availability {
 
 interface Range {
     _id: string;
-    startDate: Date; 
-    endDate: Date; 
-    key: string; 
+    startDate: Date;
+    endDate: Date;
+    key: string;
 }
 
 interface Appointment {
@@ -29,25 +29,25 @@ interface Appointment {
     time: string;
     patientId: string;
     appointmentType: string;
-    date: Date; // Include date for sorting
+    date: Date;
 }
 
 export const DoctorsHomeBanner = () => {
     const router = useRouter();
-    const [range, setRange] = useState<Range[]>([]); // Holds multiple ranges
+    const [range, setRange] = useState<Range[]>([]);
     const [availabilities, setAvailabilities] = useState<Availability[]>([]);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
-    const [modalIsOpen, setModalIsOpen] = useState(false); // State for modal
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedRange, setSelectedRange] = useState<RangeKeyDict>({
         selection: {
             startDate: new Date(),
             endDate: new Date(),
             key: 'selection',
         },
-    }); // Default range for the modal
+    });
 
     const handleComment = async (doctorId: string, receiverProfileImage: string, receiverName: string) => {
         const profilePicture = sessionStorage.getItem('profilePicture');
@@ -72,7 +72,7 @@ export const DoctorsHomeBanner = () => {
 
             if (response.ok) {
                 console.log('Contact added successfully');
-                router.push('/chat'); // Navigate to the chat page
+                router.push('/chat');
             } else {
                 const errorData = await response.json();
                 console.error('Failed to add contact:', errorData.message);
@@ -97,7 +97,7 @@ export const DoctorsHomeBanner = () => {
                 specialization: 'Specialization',
                 time: new Date(appointment.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 patientId: appointment.patientId,
-                _id: appointment._id, // Change 'id' to '_id'
+                _id: appointment._id,
                 appointmentType: appointment.appointmentType,
                 date: new Date(appointment.date),
             }));
@@ -112,7 +112,7 @@ export const DoctorsHomeBanner = () => {
 
     const fetchAvailabilities = async () => {
         const doctorId = sessionStorage.getItem('_id');
-    
+
         try {
             const response = await fetch(`/api/availabilities/getByDoctorId?doctorId=${doctorId}`);
             if (!response.ok) {
@@ -120,16 +120,15 @@ export const DoctorsHomeBanner = () => {
             }
             const data: Availability[] = await response.json();
             setAvailabilities(data);
-    
-            // Map to include all required properties
+
             const dateRanges = data.map(avail => ({
-                _id: avail._id,  // Include _id
-                doctorId: avail.doctorId,  // Include doctorId
+                _id: avail._id,
+                doctorId: avail.doctorId,
                 startDate: new Date(avail.startDate),
                 endDate: new Date(avail.endDate),
                 key: `selection-${avail._id}`,
             }));
-    
+
             setRange(dateRanges);
         } catch (err: any) {
             setError(err.message);
@@ -137,28 +136,28 @@ export const DoctorsHomeBanner = () => {
             setLoading(false);
         }
     };
-    
+
     useEffect(() => {
         fetchAppointments();
         fetchAvailabilities();
     }, []);
-    
+
     const handleOpenModal = () => {
-        setModalIsOpen(true); // Open modal on click
+        setModalIsOpen(true);
     };
 
     const handleSelect = (ranges: RangeKeyDict) => {
-        setSelectedRange(ranges); // Update selected range
+        setSelectedRange(ranges);
     };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const doctorId = sessionStorage.getItem('_id');
-    
-        // Ensure selectedRange is set correctly
+
         console.log('Selected Range:', selectedRange);
-    
+
         const ranges = [{ startDate: selectedRange.selection.startDate, endDate: selectedRange.selection.endDate }];
-    
+
         try {
             const response = await fetch('/api/availabilities/update', {
                 method: 'POST',
@@ -167,12 +166,12 @@ export const DoctorsHomeBanner = () => {
                 },
                 body: JSON.stringify({ doctorId, ranges }),
             });
-    
+
             const data = await response.json();
             if (response.ok) {
                 setMessage('Availability updated successfully!');
-                fetchAvailabilities(); // Refresh availabilities
-                setModalIsOpen(false); // Close the modal after successful submission
+                fetchAvailabilities();
+                setModalIsOpen(false);
             } else {
                 setMessage(data.message || 'Failed to update availability.');
             }
@@ -181,12 +180,13 @@ export const DoctorsHomeBanner = () => {
             setMessage('An error occurred. Please try again.');
         }
     };
+
     const handleCancelAvailability = async (id: string) => {
         try {
             const response = await fetch(`/api/availabilities/delete?id=${id}`, {
-                method: 'DELETE', // Fixing the method placement
+                method: 'DELETE',
             });
-            
+
             if (response.ok) {
                 setRange(prev => prev.filter(avail => avail._id !== id));
             } else {
@@ -197,13 +197,10 @@ export const DoctorsHomeBanner = () => {
             console.error('Failed to cancel availability:', error);
         }
     };
-    
 
-    
-    const handleDateChange = (ranges:any) => {
-        // Check if the ranges are defined and have the expected structure
+    const handleDateChange = (ranges: any) => {
         if (ranges.selection) {
-            setRange([ranges.selection]); // Update state with the selected range
+            setRange([ranges.selection]);
         }
     };
 
@@ -228,7 +225,7 @@ export const DoctorsHomeBanner = () => {
             <SectionHeadings color="#006AAC" text="Appointments" align="justify-content-center" />
             <div className="row my-5">
                 <div className="col-12 mx-auto my-5">
-                    <h2>Today's Appointments</h2>
+                    <h2>Today&apos;s Appointments</h2>
                     {loading ? (
                         <p>Loading appointments...</p>
                     ) : error ? (
@@ -258,16 +255,14 @@ export const DoctorsHomeBanner = () => {
                 <div className="row">
                     <div className="col-sm-12 col-md-8 col-lg-4 col-xl-4 mx-auto my-5 d-flex flex-wrap justify-content-between">
                         <div className="col">
-                            <h2>Click on the calander add Unavailability</h2>
-                            {/* Clickable div around DateRange to show the modal */}
+                            <h2>Click on the calendar to add Unavailability</h2>
                             <div onClick={handleOpenModal} style={{ cursor: 'pointer' }}>
-                            <DateRange
-            editableDateInputs={true} // Allow editing of dates
-            onChange={handleDateChange} // Handle date selection
-            moveRangeOnFirstSelection={false} // Prevent moving the range on first selection
-            ranges={range}
-        />
-
+                                <DateRange
+                                    editableDateInputs={true}
+                                    onChange={handleDateChange}
+                                    moveRangeOnFirstSelection={false}
+                                    ranges={range}
+                                />
                             </div>
                             {message && <p className="text-success">{message}</p>}
                         </div>
@@ -275,27 +270,22 @@ export const DoctorsHomeBanner = () => {
                     <div className="delete-availabilities col-sm-12 col-md-8 col-lg-7 col-xl-7 my-5 ms-lg-auto ms-xl-auto ms-md-0 mx-md-auto">
                         <h2>Scheduled Unavailability</h2>
                         <div className="list-group">
-                            {
-                                range.map((e, i) => (
-                                    <div key={i} className="list-group-item d-flex justify-content-between align-items-center">
-                                        <span>{`From: ${e.startDate.toLocaleDateString()} To: ${e.endDate.toLocaleDateString()}`}</span>
-                                        <button className="btn btn-danger" onClick={() => handleCancelAvailability(e._id)}>Cancel</button>
-                                    </div>
-                                ))
-                            }
+                            {range.map((e, i) => (
+                                <div key={i} className="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{`From: ${e.startDate.toLocaleDateString()} To: ${e.endDate.toLocaleDateString()}`}</span>
+                                    <button className="btn btn-danger" onClick={() => handleCancelAvailability(e._id)}>Cancel</button>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Modal for date range selection */}
             <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} className={'opacity-30'}>
-                
                 <div className="form-update-availability mx-auto">
                     <div className="col">
-                    <h2 className="w-100">Select Date Range</h2>
+                        <h2 className="w-100">Select Date Range</h2>
                     </div>
-                   
                     <DateRange
                         editableDateInputs={true}
                         onChange={handleSelect}
@@ -303,11 +293,11 @@ export const DoctorsHomeBanner = () => {
                         ranges={[selectedRange.selection]}
                     />
                     <div className="block d-flex justify-content-between align-items-center">
-                    <button className="btn btn-success" onClick={handleSubmit}>Submit</button>
-                    <button className="btn btn-secondary"  onClick={() => setModalIsOpen(false)}>Close</button>
+                        <button className="btn btn-success" onClick={handleSubmit}>Submit</button>
+                        <button className="btn btn-secondary" onClick={() => setModalIsOpen(false)}>Close</button>
                     </div>
-                    </div>
-                </Modal>
+                </div>
+            </Modal>
         </div>
     );
 };

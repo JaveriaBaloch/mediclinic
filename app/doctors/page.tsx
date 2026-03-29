@@ -78,7 +78,7 @@ const Appointments: React.FC = () => {
         try {
             const response = await axios.get('/api/doctors/getAll');
             const doctorsData: IDoctor[] = response.data;
-            setSpecializations(Array.from(new Set(doctorsData.map(doctor => doctor.specialty))));
+            setSpecializations(Array.from(new Set(doctorsData.map((doctor: IDoctor) => doctor.specialty))));
             setDoctors(doctorsData);
         } catch (error) {
             console.error('Error fetching featured doctors:', error);
@@ -225,7 +225,7 @@ const Appointments: React.FC = () => {
                                     profileImage={doctor.profileImage} 
                                     name={doctor.name} 
                                     specialization={doctor.specialty} 
-                                    id={doctor._id}                                    
+                                    id={ Number(doctor._id)}                                    
                                     />
                                 </div>
                             ))}

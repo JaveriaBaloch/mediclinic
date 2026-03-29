@@ -104,6 +104,7 @@ const SchedulePage = () => {
           {appointments?.length > 0 ? (
             appointments.map((appointment) => (
               <AppointmentCard
+              key={appointment._id}
                 img={appointment.imageUrl}
                 name={appointment.name}
                 time={new Date(appointment.appointmentTime).toLocaleString()}

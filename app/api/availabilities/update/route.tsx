@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import Availability from '@/model/availabilityModal'; // Adjust the path as necessary
-import { rescheduleAppointments } from '../../appointments/rescheduleAppointments/route'; // Adjust the path as necessary
+import { rescheduleAppointments } from '@/lib/rescheduleAppointments'; // Adjust the path as necessary
 import { connectDB } from '@/lib/mongodb';
 
 export async function POST(request: Request) {
@@ -55,6 +55,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Availability updated successfully!' }, { status: 200 });
     } catch (error) {
         console.error('Error creating/updating availability:', error);
-        return NextResponse.json({ message: 'Internal Server Error', error: error.message }, { status: 500 });
+        return NextResponse.json({ message: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
     }
 }

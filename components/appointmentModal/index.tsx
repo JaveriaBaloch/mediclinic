@@ -240,7 +240,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({ doctorId, do
 
        
         <ul className='text-danger'>
-        <h4>Doctor's Vacations</h4>
+        <h4>Doctor&apos;s Vacations</h4>
           {vacations && vacations.length > 0 ? (  // Check if vacations is defined
             vacations.map((vacation, index) => (
               <li key={index}>

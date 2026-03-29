@@ -4,13 +4,14 @@ import { faArrowLeftLong, faArrowRightLong } from "@fortawesome/free-solid-svg-i
 import Link from "next/link";
 import React from "react";
 import './style.scss'
+import Image from "next/image";
 export const HomePageHowItWorksSection:React.FC =()=>{
     return(
         <div className="container">
             <SectionHeadings text={"How It Works?"} color={"#006AAC"} align={"justify-content-center"}/>
             <div className="row">
                 <div className="col-xl-6 col-lg-6 col-md-8 col-sm-9 mb-5 pb-5">
-                <img src="/home/howitworks.svg" alt="" />
+                <Image src="/home/howitworks.svg" alt="" width={500} height={500} />
                 </div>
                 <div className="col-xl-6 col-lg-6 col-md-8 col-sm-9">
                     <ol>

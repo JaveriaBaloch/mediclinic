@@ -2,6 +2,7 @@
 
 import React, { ChangeEventHandler, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const DoctorProfile: React.FC = () => {
     const router = useRouter();
@@ -146,8 +147,13 @@ const DoctorProfile: React.FC = () => {
                 {profileImage && (
                     <div>
                         <h5>Current Profile Picture:</h5>
-                        <img src={URL.createObjectURL(profileImage)} alt="Profile" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
-                    </div>
+<Image
+    src={URL.createObjectURL(profileImage)}
+    alt="Profile"
+    width={100}
+    height={100}
+    style={{ objectFit: 'cover' }}
+/>                    </div>
                 )}
                 <div className="mb-3">
                 <input

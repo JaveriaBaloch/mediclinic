@@ -65,6 +65,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, message: 'Appointment booked successfully' }, { status: 200 });
     } catch (error) {
         console.error('Error saving appointment:', error); // Log the specific error
-        return NextResponse.json({ message: 'Error saving appointment', error: error.message }, { status: 500 });
+        return NextResponse.json({ message: 'Error saving appointment', error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
     }
 }

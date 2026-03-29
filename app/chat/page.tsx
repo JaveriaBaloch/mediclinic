@@ -1,6 +1,7 @@
 'use client'; // This directive makes the component a client component
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import Navbar from '@/components/navbar';
 import './style.scss';
 import { Icon } from '@/components/icons/icon';
@@ -32,14 +33,14 @@ const MessagePage = () => {
         }
     };
 
-    const fetchMessages = async (contactId: string) => {
+    const fetchMessages = useCallback(async (contactId: string) => {
         try {
             const response = await axios.get(`/api/messages/getByContact?senderId=${senderId}&receiverId=${contactId}`);
             setMessages(response.data);
         } catch (error) {
             console.error('Error fetching messages:', error);
         }
-    };
+    }, [senderId]);
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -120,7 +121,7 @@ const MessagePage = () => {
 
             return () => clearInterval(interval);
         }
-    }, [selectedContactId]);
+    }, [selectedContactId, fetchMessages]);
 
     return (
         <div id="Chat">
@@ -151,7 +152,7 @@ const MessagePage = () => {
                                         }}
                                     >
                                         <div className="d-flex justify-center align-align-center">
-                                            <img src={contact.profileImage} className="contact-image" alt={contact.name} />
+                                            <Image src={contact.profileImage} className="contact-image" alt={contact.name} width={40} height={40} />
                                             <div className="ps-2 text-holder">
                                                 <p className="contact-name">{contact.name}</p>
                                             </div>
@@ -172,7 +173,7 @@ const MessagePage = () => {
                                                 <div className="text">{msg.text}</div>
                                                 {msg.fileUrl && (
                                                     <div>
-                                                        <img src={msg.fileUrl} width={100} alt="Attachment" />
+                                                        <Image src={msg.fileUrl} width={100} height={100} alt="Attachment" />
                                                         <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
                                                             <Icon icon={faDownload} color="#01A1BB" size="1x" />
                                                         </a>
@@ -186,7 +187,7 @@ const MessagePage = () => {
                                     <div className="attachments">
                                         {filePreview ? (
                                             <div className="file-preview">
-                                                <img src={filePreview} alt="Selected" className="img-fluid" />
+                                                <Image src={filePreview} alt="Selected" className="img-fluid" width={100} height={100} />
                                                 {fileUrl && (
                                                     <a href={fileUrl} download={fileName}>
                                                         <Icon icon={faDownload} color="#01A1BB" size="2x" />

@@ -34,6 +34,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(messages);
     } catch (error) {
         console.error('Error fetching messages:', error);
-        return NextResponse.json({ message: 'Error fetching messages', error: error.message }, { status: 500 });
+        return NextResponse.json({ message: 'Error fetching messages', error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
     }
 }

@@ -2,6 +2,7 @@
 
 import { IDoctor } from "@/model/doctorModal";
 import { useEffect, useState } from "react";
+import Image from 'next/image';
 import './style.scss';
 import { Icon } from "@/components/icons/icon";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
@@ -99,7 +100,7 @@ export const AdminHomePageView = () => {
   };
 
   // Extracting unique specialties for the dropdown
-  const specialties = [...new Set(doctorsList.map(doctor => doctor.specialty))];
+const specialties = Array.from(new Set(doctorsList.map(doctor => doctor.specialty)));
 
   // Filtering doctors based on search criteria
   const filteredDoctors = doctorsList.filter((doctor) => {
@@ -149,7 +150,7 @@ export const AdminHomePageView = () => {
           {filteredDoctors.map((doctor) => (
             <div key={doctor.doctorId} className="doctor-card-admin mt-3 m-2 d-flex flex-wrap justify-content-start align-items-start p-4">
               <div className="d-block p-2">
-                <img src={doctor.profileImage} alt={doctor.name} className="doctor-image" />
+                <Image src={doctor.profileImage} alt={doctor.name} className="doctor-image" width={80} height={80} />
                 <h5>{doctor.name}</h5>
                 <p className="specialization">{doctor.specialty}</p>
                 <b className={`status ${doctor.status === 'pending' ? 'bg-warning' : ''} ${doctor.status === 'accepted' ? 'bg-success text-white' : ''} ${doctor.status === 'rejected' ? 'bg-danger text-white' : ''}`}>

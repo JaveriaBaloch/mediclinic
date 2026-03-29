@@ -3,10 +3,11 @@ import { SectionHeadings } from "../sectionHeadings"
 import './style.scss'
 import { Icon } from "../icons/icon"
 import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons"
+import Image from 'next/image';
 export const HomePageContactUsSection = ()=>{
     return(
         <div id="ContactUsSection">
-            <img src="/home/contactusbg.svg" alt="" className="bg1" />
+            <Image src="/home/contactusbg.svg" alt="Contact Us Background" className="bg1" width={1920} height={400} />
             <div className="container">
                 <SectionHeadings color="#FFFFFF" text={'Contact Us'} align="justify-content-center"/>
                 <form>

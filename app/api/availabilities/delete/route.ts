@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import Availability from '@/model/availabilityModal'; // Adjust the path as necessary
 import { connectDB } from '@/lib/mongodb';
-import { rescheduleAppointmentsForEmptyDates } from '../../appointments/rescheduleForEmptyDates/route';
+import { rescheduleAppointmentsForEmptyDates } from '@/lib/rescheduleAppointmentsForEmptyDates'; 
 
 export async function DELETE(request: Request) {
     try {

@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEventHandler, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Icon } from "@/components/icons/icon";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
@@ -201,7 +202,7 @@ const DoctorAuth = () => {
                                 {currentContent === 1 && (
                                     <>
                                         <h1>Online Consultations</h1>
-                                        <img src="/home/auth1.png" alt="Online Consultations" />
+                                        <Image src="/home/auth1.png" alt="Online Consultations" width={300} height={200} />
                                     </>
                                 )}
                             </div>
@@ -209,7 +210,7 @@ const DoctorAuth = () => {
                                 {currentContent === 2 && (
                                     <>
                                         <h1>Meet Our Doctors</h1>
-                                        <img src="/home/auth2.png" alt="Meet Our Doctors" />
+                                        <Image src="/home/auth2.png" alt="Meet Our Doctors" width={300} height={200} />
                                     </>
                                 )}
                             </div>
@@ -217,7 +218,7 @@ const DoctorAuth = () => {
                                 {currentContent === 3 && (
                                     <>
                                         <h1>Join Us Today</h1>
-                                        <img src="/home/auth3.png" alt="Join Us Today" />
+                                        <Image src="/home/auth3.png" alt="Join Us Today" width={300} height={200} />
                                     </>
                                 )}
                             </div>
@@ -229,7 +230,7 @@ const DoctorAuth = () => {
                         </div>
                     </div>
                     <div className="forms">
-                        <img src="/images/icon.png" alt="" />
+                        <Image src="/images/icon.png" alt="Mediclinic Icon" width={80} height={80} />
                         <div className={`${"form-container"} ${isSignUp ? 'show-signup' : 'show-signin'}`}>
                             <form id='signup' onSubmit={handleSignUp} encType='multipart/form-data'>
                                 <SectionHeadings text={'Doctor Account Creation'} color='#006AAC' align='justify-content-center' />
@@ -303,7 +304,7 @@ const DoctorAuth = () => {
                                 setError(false)
                                 setMessage("")
                             }}>
-                                    Don't have an account? Sign Up
+                                    Don&apos;t have an account? Sign Up
                                 </p>
                             </form>
                         </div>
