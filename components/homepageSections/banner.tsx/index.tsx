@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Icon } from "../../icons/icon"
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile"
 import './style.scss'
+import Image from "next/image"
 export const BannerHomePage = () =>{
     return(
         <div className="my-t pt-5 container">
@@ -16,7 +17,7 @@ export const BannerHomePage = () =>{
                     </Link>
                 </div>
                 <div className="col-xl-7 col-lg-6 col-md-0 col-sm-0 d-flex justify-content-end doctor-image-holder">
-                    <img src="/home/doctor.png" alt="" className="img mt-5"/>
+                    <Image src="/home/doctor.png" alt="" className="img mt-5 w-50" width={300} height={500}/>
                 </div>
             </div>
 

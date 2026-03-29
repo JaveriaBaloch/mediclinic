@@ -3,6 +3,8 @@
 @import '@/scss/variables';
 .container{
     margin-top: 10rem;
+    position: relative;
+    z-index: 1;
     ol{
         li{
             color: $link-color-dark-blue;

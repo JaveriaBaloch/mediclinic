@@ -7,7 +7,7 @@ import './style.scss'
 import Image from "next/image";
 export const HomePageHowItWorksSection:React.FC =()=>{
     return(
-        <div className="container">
+        <div className="container py-5">
             <SectionHeadings text={"How It Works?"} color={"#006AAC"} align={"justify-content-center"}/>
             <div className="row">
                 <div className="col-xl-6 col-lg-6 col-md-8 col-sm-9 mb-5 pb-5">

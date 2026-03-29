@@ -3,10 +3,11 @@ import { SectionHeadings } from "@/components/sectionHeadings"
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { TestimonialCard } from "./TestimonialCards"
 import './style.scss'
+import Image from "next/image"
 export const HomePageTestimonialsSection = () =>{
     return(
         <div id="testinomials">
-            <img src="/home/testimonials.svg" alt="" className="bg1" />
+            <Image src="/home/testimonials.svg" alt="" className="bg1" width={50} height={50}/>
             <div className="container">
                 <SectionHeadings  color="#006AAC" text={'Testimonials'} align="flex-start"/>
                 <div className="testimonials">
