@@ -14,9 +14,18 @@ import Link from "next/link";
 import { HomePageHealthTipSection } from "@/components/homepageSections/HomePageHealthTipSection";
 import { AdminHomePageView } from "@/components/admin";
 import { DoctorsHomeBanner } from "@/components/DoctorsHomeBanner";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const role = sessionStorage.getItem("role");
+   const [role, setRole] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setRole(sessionStorage.getItem("role"));
+    setIsLoaded(true);
+  }, []);
+
+  if (!isLoaded) return null; // prevent flash of wrong content
 
   return (
     <main>

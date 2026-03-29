@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 interface Appointment {
   appointmentTime: string;
-  doctorId:string;
+  doctorId: string;
   img: string;
   name: string;
   specialization: string;
@@ -23,39 +23,45 @@ interface Appointment {
 }
 
 const SchedulePage = () => {
-  const [appointments, setAppointments] = useState<Appointment[]>([]); // State for storing appointments
-  const userId = sessionStorage.getItem('_id'); // Retrieve user ID from sessionStorage
-  const role = sessionStorage.getItem('role'); // Retrieve user role (either 'doctor' or 'patient')
-  const router = useRouter()
-  const handleCancel = async (id: string) => {
-    try {
-        const response = await fetch(`/api/appointments/cancel?id=${id}`, {
-            method: 'DELETE',
-        });
-        if (response.ok) {
-            setAppointments(prev => prev.filter(appointment => appointment._id !== id));
-        } else {
-            const errorData = await response.json();
-            console.error('Failed to cancel appointment:', errorData.message);
-        }
-    } catch (error) {
-        console.error('Failed to cancel appointment:', error);
-    }
-};
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
+    setUserId(sessionStorage.getItem('_id'));
+    setRole(sessionStorage.getItem('role'));
+  }, []);
+
+  const handleCancel = async (id: string) => {
+    try {
+      const response = await fetch(`/api/appointments/cancel?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setAppointments(prev => prev.filter(appointment => appointment._id !== id));
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to cancel appointment:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Failed to cancel appointment:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (!userId || !role) return;
+
     const fetchAppointments = async () => {
       try {
         let response;
 
         if (role === 'doctor') {
-          // Fetch appointments by doctor ID
           response = await axios.get(`/api/appointments/getAllDoctorsById?id=${userId}`);
         } else if (role === 'patient') {
-          // Fetch appointments by patient ID
           response = await axios.get(`/api/appointments/getAllPatientsById?id=${userId}`);
         }
-        console.log(response?.data.appointments)
+        console.log(response?.data.appointments);
         if (response && response.data) {
           setAppointments(response.data.appointments);
         } else {
@@ -68,33 +74,34 @@ const SchedulePage = () => {
 
     fetchAppointments();
   }, [userId, role]);
+
   const handleAddContact = async (doctorId: string, receiverProfileImage: string, receiverName: string) => {
     const profilePicture = sessionStorage.getItem('profilePicture') || '';
-    const userId = sessionStorage.getItem('_id') || '';
+    const currentUserId = sessionStorage.getItem('_id') || '';
     const username = sessionStorage.getItem('username') || '';
     try {
-        const response = await fetch('/api/contacts/addContact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId,
-                contactId: doctorId,
-                userProfileImage: profilePicture,
-                name: username,
-                receiverProfileImage,
-                receiverName,
-            }),
-        });
-        if (response.ok) {
-            router.push('/chat');
-        } else {
-            const errorData = await response.json();
-            console.error('Failed to add contact:', errorData.message);
-        }
+      const response = await fetch('/api/contacts/addContact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUserId,
+          contactId: doctorId,
+          userProfileImage: profilePicture,
+          name: username,
+          receiverProfileImage,
+          receiverName,
+        }),
+      });
+      if (response.ok) {
+        router.push('/chat');
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to add contact:', errorData.message);
+      }
     } catch (error) {
-        console.error('Error adding contact:', error);
+      console.error('Error adding contact:', error);
     }
-};
+  };
 
   return (
     <div>
@@ -104,19 +111,19 @@ const SchedulePage = () => {
           {appointments?.length > 0 ? (
             appointments.map((appointment) => (
               <AppointmentCard
-              key={appointment._id}
+                key={appointment._id}
                 img={appointment.imageUrl}
                 name={appointment.name}
                 time={new Date(appointment.appointmentTime).toLocaleString()}
                 appointmentType={appointment.appointmentType}
                 id={appointment._id}
                 specialization={appointment.specialization}
-                handleComment={()=>handleAddContact(appointment.doctorId,appointment.imageUrl,appointment.name)}
+                handleComment={() => handleAddContact(appointment.doctorId, appointment.imageUrl, appointment.name)}
                 handleCancel={handleCancel}
               />
             ))
           ) : (
-            <p>No appointments available.</p> // Message when no appointments are found
+            <p>No appointments available.</p>
           )}
         </div>
       </div>

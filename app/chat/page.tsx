@@ -1,4 +1,4 @@
-'use client'; // This directive makes the component a client component
+'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -16,9 +16,14 @@ const MessagePage = () => {
     const [messages, setMessages] = useState<any[]>([]);
     const [contacts, setContacts] = useState<any[]>([]);
     const [filteredContacts, setFilteredContacts] = useState<any[]>([]);
-    const [searchQuery, setSearchQuery] = useState(''); // Search query state
+    const [searchQuery, setSearchQuery] = useState('');
     const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
-    const senderId = sessionStorage.getItem('_id');
+    const [senderId, setSenderId] = useState<string | null>(null);  // ✅ state instead
+
+    // ✅ Load sessionStorage on client only
+    useEffect(() => {
+        setSenderId(sessionStorage.getItem('_id'));
+    }, []);
 
     const fetchContacts = async () => {
         const userId = sessionStorage.getItem('_id');
@@ -27,13 +32,14 @@ const MessagePage = () => {
         try {
             const response = await axios.get(`/api/contacts/getAll?userId=${userId}`);
             setContacts(response.data.contacts);
-            setFilteredContacts(response.data.contacts); // Initialize filtered contacts
+            setFilteredContacts(response.data.contacts);
         } catch (error) {
             console.error('Error fetching contacts:', error);
         }
     };
 
     const fetchMessages = useCallback(async (contactId: string) => {
+        if (!senderId) return;  // ✅ guard
         try {
             const response = await axios.get(`/api/messages/getByContact?senderId=${senderId}&receiverId=${contactId}`);
             setMessages(response.data);
@@ -98,7 +104,6 @@ const MessagePage = () => {
         }
     };
 
-    // Filter contacts by search query
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value.toLowerCase();
         setSearchQuery(query);
@@ -108,9 +113,12 @@ const MessagePage = () => {
         setFilteredContacts(filtered);
     };
 
+    // ✅ Only fetch contacts after senderId is set
     useEffect(() => {
-        fetchContacts();
-    }, []);
+        if (senderId) {
+            fetchContacts();
+        }
+    }, [senderId]);
 
     useEffect(() => {
         if (selectedContactId) {
@@ -128,10 +136,8 @@ const MessagePage = () => {
             <Navbar activeItem={4} />
             <div className="container-fluid mt-5 pt-5">
                 <div className="row mt-4 px-0 rounded-4">
-                    {/* Clients/Contacts Section */}
                     <div className="col-xl-3 col-lg-4 col-md-9 col-sm-9 mx-auto rounded-4">
                         <div className="rounded-4 bg-white p-0">
-                            {/* Search Input */}
                             <div className="search-bar p-2">
                                 <input
                                     type="text"
@@ -141,10 +147,10 @@ const MessagePage = () => {
                                     onChange={handleSearch}
                                 />
                             </div>
-                            <div className="clients  pt-3 pb-3 ps-2 pe-2 rounded-4">
+                            <div className="clients pt-3 pb-3 ps-2 pe-2 rounded-4">
                                 {filteredContacts.map((contact) => (
                                     <div
-                                        className={`client px-3 py-2 ${contact.contactId === selectedContactId ? 'active-contact' : ''}`} // Add conditional class
+                                        className={`client px-3 py-2 ${contact.contactId === selectedContactId ? 'active-contact' : ''}`}
                                         key={contact.contactId}
                                         onClick={() => {
                                             setSelectedContactId(contact.contactId);
@@ -162,7 +168,6 @@ const MessagePage = () => {
                             </div>
                         </div>
                     </div>
-                    {/* Messages Section */}
                     <div className="col-xl-9 col-lg-8 col-md-9 col-sm-9 mx-auto">
                         <div className="rounded-4 bg-white p-3 ms-2">
                             <div className="messages">

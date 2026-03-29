@@ -1,4 +1,4 @@
-'use client'; // Ensures the component is client-side
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -30,11 +30,12 @@ const Appointments: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [specializations, setSpecializations] = useState<string[]>([]);
-    const [selectedSpecialization, setSelectedSpecialization] = useState<string>(''); 
+    const [selectedSpecialization, setSelectedSpecialization] = useState<string>('');
     const [currentPage, setCurrentPage] = useState<number>(1);
     const appointmentsPerPage = 10;
     const router = useRouter();
     const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+    const [role, setRole] = useState<string | null>(null);  // ✅ added
 
     const handleCancel = async (id: string) => {
         try {
@@ -53,11 +54,13 @@ const Appointments: React.FC = () => {
     };
 
     useEffect(() => {
+        const currentRole = sessionStorage.getItem('role');  // ✅ inside useEffect
+        const id = sessionStorage.getItem('_id');
+        setRole(currentRole);
+
         const fetchData = async () => {
-            const role = sessionStorage.getItem('role');
-            const id = sessionStorage.getItem('_id');
             try {
-                if (role === 'doctor' && id) {
+                if (currentRole === 'doctor' && id) {
                     const response = await axios.get(`/api/appointments/getAllDoctorsById?id=${id}`);
                     if (response.data.success) {
                         setAppointments(response.data.appointments);
@@ -109,7 +112,7 @@ const Appointments: React.FC = () => {
             });
             if (response.ok) {
                 setFeedbackMessage(`Contact added successfully: ${receiverName}`);
-                setTimeout(() => setFeedbackMessage(null), 3000); // Clear message after 3 seconds
+                setTimeout(() => setFeedbackMessage(null), 3000);
                 router.push('/chat');
             } else {
                 const errorData = await response.json();
@@ -141,11 +144,12 @@ const Appointments: React.FC = () => {
     const indexOfLastDoctor = currentPage * appointmentsPerPage;
     const indexOfFirstDoctor = indexOfLastDoctor - appointmentsPerPage;
     const currentDoctors = filteredDoctors?.slice(indexOfFirstDoctor, indexOfLastDoctor);
+
     return (
         <div className="container mt-5 pt-5">
             <Navbar activeItem={1} />
             {feedbackMessage && <div className="alert alert-info">{feedbackMessage}</div>}
-            {sessionStorage.getItem('role') === 'doctor' && (
+            {role === 'doctor' && (
                 <div className="mt-5 pt-5">
                     <SectionHeadings text="Appointments" color="#062635" align="flex-content-start" />
                     <div className="input-group mb-3">
@@ -170,7 +174,7 @@ const Appointments: React.FC = () => {
                 </div>
             )}
             <div className="row">
-                {sessionStorage.getItem('role') === 'doctor' ? (
+                {role === 'doctor' ? (
                     currentAppointments?.length > 0 ? (
                         currentAppointments.map((appointment, i) => (
                             <div className="col-md-4 mb-4" key={i}>
@@ -182,7 +186,7 @@ const Appointments: React.FC = () => {
                                     time={new Date(appointment.appointmentTime).toLocaleString()}
                                     appointmentType={appointment.appointmentType}
                                     handleComment={() => handleAddContact(appointment.doctorId, appointment.imageUrl, appointment.name)}
-                                    handleCancel={handleCancel} // Pass handleCancel directly
+                                    handleCancel={handleCancel}
                                 />
                             </div>
                         ))
@@ -194,7 +198,7 @@ const Appointments: React.FC = () => {
                 ) : (
                     <></>
                 )}
-                {(!sessionStorage.getItem('role') || sessionStorage.getItem('role') === 'patient') && (
+                {(!role || role === 'patient') && (
                     <div className="mt-5 py-1">
                         <h4 className="small-heading">Doctors</h4>
                         <div className="input-group mb-3">
@@ -219,13 +223,13 @@ const Appointments: React.FC = () => {
                             </select>
                         </div>
                         <div className="d-flex flex-wrap justify-content-center align-items-center">
-                            {currentDoctors.map((doctor,i) => (
+                            {currentDoctors.map((doctor, i) => (
                                 <div className="col-md-4 mb-4" key={i}>
-                                    <DoctorsCard 
-                                    profileImage={doctor.profileImage} 
-                                    name={doctor.name} 
-                                    specialization={doctor.specialty} 
-                                    id={ Number(doctor._id)}                                    
+                                    <DoctorsCard
+                                        profileImage={doctor.profileImage}
+                                        name={doctor.name}
+                                        specialization={doctor.specialty}
+                                        id={String(doctor._id)}
                                     />
                                 </div>
                             ))}
