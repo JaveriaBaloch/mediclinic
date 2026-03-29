@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import './style.scss';
+import Image from 'next/image';
   const tips = [
         {
             heading: "How to remain Healthy?",
@@ -52,7 +53,7 @@ export const HomePageHealthTipSection = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-6 col-md-12 d-flex justify-content-center">
-                                    <img src={tip.image} alt="Health Tip" className="tip-image" />
+                                    <Image width={200} height={500} src={tip.image} alt="Health Tip" className="tip-image" />
                                 </div>
                             </div>
                         ))}

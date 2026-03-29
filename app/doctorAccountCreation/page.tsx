@@ -2,7 +2,6 @@
 
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Icon } from "@/components/icons/icon";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import './style.scss';
@@ -11,7 +10,8 @@ import { SectionHeadings } from '@/components/sectionHeadings';
 import { InputField } from '@/components/input';
 import { useRouter } from 'next/navigation';
 
-const DoctorAuth = () => {
+const Auth = () => {
+    const router = useRouter();
     const [currentContent, setCurrentContent] = useState(1);
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -19,16 +19,14 @@ const DoctorAuth = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [profileImage, setProfileImage] = useState<File | null>(null);
-    const [isSignUp, setIsSignUp] = useState(true); // Track whether Sign-Up or Sign-In is displayed
+    const [isSignUp, setIsSignUp] = useState(true);
     const [message, setMessage] = useState("");
-    const router = useRouter()
-
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setCurrentContent((prev) => (prev === 3 ? 1 : prev + 1)); // Cycle through contents
-        }, 4000); // Change content every 4 seconds
-        return () => clearTimeout(timer); // Cleanup timer on component unmount
+            setCurrentContent((prev) => (prev === 3 ? 1 : prev + 1));
+        }, 4000);
+        return () => clearTimeout(timer);
     }, [currentContent]);
 
     const handleEmailChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -44,86 +42,68 @@ const DoctorAuth = () => {
     };
 
     const handleUsernameChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-        setUsername(event.target.value);
-    };
+    console.log("Username typed:", event.target.value);  // check this
+    setUsername(event.target.value);
+};
 
     const handleProfileImageChange: ChangeEventHandler<HTMLInputElement> = (event) => {
         const files = event.target.files;
         if (files && files.length > 0) {
             setProfileImage(files[0]);
         } else {
-            setProfileImage(null); // Reset if no file selected
+            setProfileImage(null);
         }
     };
 
     const handleSignUp = async (event: React.FormEvent) => {
         event.preventDefault();
-
         setError(false);
         setMessage("");
 
-        const normalizedPassword = password.trim();
-        const normalizedConfirmPassword = confirmPassword.trim();
+const usernamePattern = /^[a-zA-Z0-9 _-]{3,16}$/;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
-        // Define regex patterns
-        const usernamePattern = /^[a-zA-Z_-]{3,16}$/; // Letters, underscores, hyphens, 3-16 chars, no numbers
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
-        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/; // At least 8 characters, one letter, one number (specials allowed)
-
-        // Validate fields
         if (!usernamePattern.test(username)) {
-            setError(true)
+            setError(true);
             setMessage('Invalid username. It must be 3-16 characters long and can contain only letters, underscores, or hyphens.');
-            return; // Stop execution if validation fails
+            return;
         }
         if (!emailPattern.test(email)) {
-            setError(true)
+            setError(true);
             setMessage('Invalid email format.');
-            console.log('Invalid email:', email); // Debugging log
-            return; // Stop execution if validation fails
+            return;
         }
-        if (!passwordPattern.test(normalizedPassword)) {
-
-            setError(true)
+        if (!passwordPattern.test(password)) {
+            setError(true);
             setMessage('Password must be at least 8 characters long and include at least one letter and one number.');
-            console.log('Invalid password:', normalizedPassword); // Debugging log
-            return; // Stop execution if validation fails
+            return;
         }
-        if (normalizedPassword !== normalizedConfirmPassword) {
-            setError(true)
+        if (password !== confirmPassword) {
+            setError(true);
             setMessage('Passwords do not match.');
-            return; // Stop execution if passwords don't match
+            return;
         }
 
         const formData = new FormData();
         formData.append('username', username);
         formData.append('email', email);
-        formData.append('password', normalizedPassword);
-        formData.append('role', 'doctor'); // Default role if not provided
+        formData.append('password', password);
+        formData.append('role', 'patient');
         if (profileImage) {
             formData.append('profileImage', profileImage);
         }
 
-        console.log('Submitting data:', {
-            username,
-            email,
-            password,
-            profileImage,
-        });
-
         try {
             const response = await fetch('/api/auth/signup', {
                 method: 'POST',
-                body: formData, // Do not set Content-Type here
+                body: formData,
             });
 
             const result = await response.json();
-            console.log(result)
-            setMessage(result.message); // Check the response from your API
             if (response.ok) {
-                // Clear fields after successful signup
-                setError(false)
-
+                setError(false);
+                setMessage(result.message);
                 setEmail("");
                 setUsername("");
                 setPassword("");
@@ -134,37 +114,33 @@ const DoctorAuth = () => {
                 sessionStorage.setItem("profilePicture", result.user.profileImage);
                 sessionStorage.setItem("email", result.user.email);
                 sessionStorage.setItem("role", result.user.role);
-
-                router.push('/profile')
+                router.push('/profile');
             } else {
-                setError(true)
+                setError(true);
                 setMessage(result.message || "An error occurred during signup.");
             }
         } catch (err) {
-            setError(true)
+            setError(true);
             setMessage("An unexpected error occurred.");
         }
     };
 
     const handleSignIn = async (event: React.FormEvent) => {
         event.preventDefault();
+        setError(false);
+        setMessage("");
 
         try {
             const response = await fetch('/api/auth/signin', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
 
             const data = await response.json();
             if (response.ok) {
-                // Handle successful sign in
-                console.log('User signed in successfully:', data);
-                setMessage(data.message)
-                setError(false)
-                // Optionally, clear fields or redirect
+                setError(false);
+                setMessage(data.message);
                 setEmail("");
                 setPassword("");
                 sessionStorage.setItem("_id", data.user._id);
@@ -172,24 +148,22 @@ const DoctorAuth = () => {
                 sessionStorage.setItem("profilePicture", data.user.profileImage);
                 sessionStorage.setItem("email", data.user.email);
                 sessionStorage.setItem("role", data.user.role);
-                router.push('/')
-
+                router.push('/');
             } else {
-                setError(true)
+                setError(true);
                 setMessage(data.message || "An error occurred during sign in.");
             }
-        } catch (error) {
-            setError(true)
-            setMessage('Error signing in: ' + error);
+        } catch (err) {
+            setError(true);
+            setMessage("An unexpected error occurred.");
         }
     };
 
     return (
         <div id="Auth">
-            {
-                (message!="")&&
-                <div className={`alert ${error? 'alert-danger':'alert-primary'}`}>{message}</div>
-            }
+            {message !== "" && (
+                <div className={`alert ${error ? 'alert-danger' : 'alert-primary'}`}>{message}</div>
+            )}
             <div className="container">
                 <div className="row">
                     <div className="intro">
@@ -231,82 +205,37 @@ const DoctorAuth = () => {
                     </div>
                     <div className="forms">
                         <Image src="/images/icon.png" alt="Mediclinic Icon" width={80} height={80} />
-                        <div className={`${"form-container"} ${isSignUp ? 'show-signup' : 'show-signin'}`}>
-                            <form id='signup' onSubmit={handleSignUp} encType='multipart/form-data'>
-                                <SectionHeadings text={'Doctor Account Creation'} color='#006AAC' align='justify-content-center' />
-                                <div className="container my-3">
-                                    <InputField
-                                        placeholder="Username"
-                                        onTextChange={handleUsernameChange}
-                                        type="text"
-                                        name='username'
-                                    />
-                                    <InputField
-                                        placeholder="Email"
-                                        onTextChange={handleEmailChange}
-                                        type="email"
-                                        name='email'
-                                    />
-                                    <InputField
-                                        placeholder="Password"
-                                        onTextChange={handlePasswordChange}
-                                        type="password"
-                                        name='password'
-                                    />
-                                    <InputField
-                                        placeholder="Confirm Password"
-                                        onTextChange={handleConfirmPasswordChange}
-                                        type="password"
-                                        name='confirmPassword'
-                                    />
-                                    <InputField
-                                        placeholder="Profile Picture"
-                                        onTextChange={handleProfileImageChange}
-                                        type="file"
-                                        name="profileImage"
-                                    />
-                                    {error && <p className="error-message">{message}</p>} {/* Display error message */}
-                                    <button id="signupbtn">
-                                        Sign up
-                                    </button>
-                                </div>
-                                <p  id="showsignin" 
-                                    onClick={() => {
-                                        setIsSignUp(false)
-                                        setError(false)
-                                        setMessage("")
-                                    }}>
-                                    Already have an account? Sign In
-                                </p>
-                            </form>
-                            <form id='signin' onSubmit={handleSignIn}>
-                                <SectionHeadings text={'Sign In'} color='#006AAC' align='justify-content-center' />
-                                <div className="container my-3">
-                                    <InputField
-                                        placeholder="Email"
-                                        onTextChange={handleEmailChange}
-                                        type="email"
-                                        name='email'
-                                    />
-                                    <InputField
-                                        placeholder="Password"
-                                        onTextChange={handlePasswordChange}
-                                        type="password"
-                                        name='password'
-                                    />
-                                    {error && <p className="error-message">{message}</p>} {/* Display error message */}
-                                    <button id="signinbtn">
-                                        Sign In
-                                    </button>
-                                </div>
-                                <p id="showsignup" onClick={() => {
-                                setIsSignUp(true)
-                                setError(false)
-                                setMessage("")
-                            }}>
-                                    Don&apos;t have an account? Sign Up
-                                </p>
-                            </form>
+                        <div className={`form-container ${isSignUp ? 'show-signup' : 'show-signin'}`}>
+                            {isSignUp ? (
+                                <form id="signup" onSubmit={handleSignUp} encType="multipart/form-data">
+                                    <SectionHeadings text={'Sign Up'} color="#006AAC" align="justify-content-center" />
+                                    <div className="container my-3">
+                                        <InputField placeholder="Username" onTextChange={handleUsernameChange} type="text" name="username" />
+                                        <InputField placeholder="Email" onTextChange={handleEmailChange} type="email" name="email" />
+                                        <InputField placeholder="Password" onTextChange={handlePasswordChange} type="password" name="password" />
+                                        <InputField placeholder="Confirm Password" onTextChange={handleConfirmPasswordChange} type="password" name="confirmPassword" />
+                                        <InputField placeholder="Profile Picture" onTextChange={handleProfileImageChange} type="file" name="profileImage" />
+                                        {error && <p className="error-message">{message}</p>}
+                                        <button id="signupbtn">Sign up</button>
+                                    </div>
+                                    <p id="showsignin" onClick={() => { setIsSignUp(false); setError(false); setMessage(""); }}>
+                                        Already have an account? Sign In
+                                    </p>
+                                </form>
+                            ) : (
+                                <form id="signin" onSubmit={handleSignIn}>
+                                    <SectionHeadings text={'Sign In'} color="#006AAC" align="justify-content-center" />
+                                    <div className="container my-3">
+                                        <InputField placeholder="Email" onTextChange={handleEmailChange} type="email" name="email" />
+                                        <InputField placeholder="Password" onTextChange={handlePasswordChange} type="password" name="password" />
+                                        {error && <p className="error-message">{message}</p>}
+                                        <button id="signinbtn">Sign In</button>
+                                    </div>
+                                    <p id="showsignup" onClick={() => { setIsSignUp(true); setError(false); setMessage(""); }}>
+                                        Don&apos;t have an account? Sign Up
+                                    </p>
+                                </form>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -315,4 +244,4 @@ const DoctorAuth = () => {
     );
 };
 
-export default DoctorAuth;
+export default Auth;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/navbar';
 import './style.scss';
@@ -18,9 +18,9 @@ const MessagePage = () => {
     const [filteredContacts, setFilteredContacts] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
-    const [senderId, setSenderId] = useState<string | null>(null);  // ✅ state instead
+    const [senderId, setSenderId] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // ✅ Load sessionStorage on client only
     useEffect(() => {
         setSenderId(sessionStorage.getItem('_id'));
     }, []);
@@ -39,7 +39,7 @@ const MessagePage = () => {
     };
 
     const fetchMessages = useCallback(async (contactId: string) => {
-        if (!senderId) return;  // ✅ guard
+        if (!senderId) return;
         try {
             const response = await axios.get(`/api/messages/getByContact?senderId=${senderId}&receiverId=${contactId}`);
             setMessages(response.data);
@@ -52,8 +52,8 @@ const MessagePage = () => {
         const file = event.target.files?.[0];
         if (file) {
             setFileName(file.name);
-            const fileUrl = URL.createObjectURL(file);
-            setFileUrl(fileUrl);
+            const url = URL.createObjectURL(file);
+            setFileUrl(url);
 
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -67,6 +67,15 @@ const MessagePage = () => {
         }
     };
 
+    const clearAttachment = () => {
+        setFilePreview(null);
+        setFileName(null);
+        setFileUrl(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -76,8 +85,7 @@ const MessagePage = () => {
             formData.append('receiverId', selectedContactId || '');
             formData.append('message', message);
 
-            const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-            const file = fileInput.files?.[0];
+            const file = fileInputRef.current?.files?.[0];
             if (file) {
                 formData.append('file', file);
             }
@@ -91,9 +99,7 @@ const MessagePage = () => {
 
                 if (response.status === 200) {
                     setMessage('');
-                    setFilePreview(null);
-                    setFileName(null);
-                    setFileUrl(null);
+                    clearAttachment();
                     fetchMessages(selectedContactId || '');
                 } else {
                     console.error('Error sending message');
@@ -113,7 +119,6 @@ const MessagePage = () => {
         setFilteredContacts(filtered);
     };
 
-    // ✅ Only fetch contacts after senderId is set
     useEffect(() => {
         if (senderId) {
             fetchContacts();
@@ -193,20 +198,12 @@ const MessagePage = () => {
                                         {filePreview ? (
                                             <div className="file-preview">
                                                 <Image src={filePreview} alt="Selected" className="img-fluid" width={100} height={100} />
-                                                {fileUrl && (
-                                                    <a href={fileUrl} download={fileName}>
-                                                        <Icon icon={faDownload} color="#01A1BB" size="2x" />
-                                                    </a>
-                                                )}
+                                                <button type="button" className="btn btn-sm btn-danger" onClick={clearAttachment}>Remove</button>
                                             </div>
                                         ) : fileName ? (
                                             <div className="file-preview">
                                                 <p>{fileName}</p>
-                                                {fileUrl && (
-                                                    <a href={fileUrl} download={fileName}>
-                                                        <Icon icon={faDownload} color="#01A1BB" size="2x" />
-                                                    </a>
-                                                )}
+                                                <button type="button" className="btn btn-sm btn-danger" onClick={clearAttachment}>Remove</button>
                                             </div>
                                         ) : null}
                                     </div>
@@ -220,6 +217,7 @@ const MessagePage = () => {
                                             onChange={(e) => setMessage(e.target.value)}
                                         />
                                         <input
+                                            ref={fileInputRef}
                                             type="file"
                                             accept="image/*,application/pdf"
                                             onChange={handleFileUpload}
